@@ -8,7 +8,7 @@ brew upgrade
 
 # Install GNU core utilities (those that come with OS X are outdated)
 brew install coreutils
-echo "Don’t forget to add $(brew --prefix coreutils)/libexec/gnubin to \$PATH."
+echo "Don’t forget to add $(brew --prefix coreutils)/libexec/gnubin to \$PATH in '~/.profile'."
 # Install GNU `find`, `locate`, `updatedb`, and `xargs`, g-prefixed
 brew install findutils
 
@@ -17,8 +17,14 @@ brew install wget --enable-iri
 
 # Install RingoJS and Narwhal
 # Note that the order in which these are installed is important; see http://git.io/brew-narwhal-ringo.
-brew install ringojs
-brew install narwhal
+#brew install ringojs
+#brew install narwhal
+
+# Install Python, pip, and virtualenv
+brew install python
+echo "Don’t forget to prefix $(brew --prefix)/bin to \$PATH in '~/.profile.'"
+easy_install pip
+pip install virtualenv
 
 # Install more recent versions of some OS X tools
 brew tap homebrew/dupes
