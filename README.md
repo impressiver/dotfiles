@@ -48,44 +48,56 @@ export PATH="~/bin:$PATH"
 
 # Git credentials
 # Not in the repository, to prevent people from accidentally committing under my name
-GIT_AUTHOR_NAME="Mathias Bynens"
+GIT_AUTHOR_NAME="Ian White"
+GIT_AUTHOR_EMAIL="ian@impressiver.com"
+
 GIT_COMMITTER_NAME="$GIT_AUTHOR_NAME"
-git config --global user.name "$GIT_AUTHOR_NAME"
-GIT_AUTHOR_EMAIL="mathias@mailinator.com"
 GIT_COMMITTER_EMAIL="$GIT_AUTHOR_EMAIL"
+
+git config --global user.name "$GIT_AUTHOR_NAME"
 git config --global user.email "$GIT_AUTHOR_EMAIL"
+git config --global credential.helper osxkeychain
 ```
 
-You could also use `~/.extra` to override settings, functions and aliases from my dotfiles repository. It’s probably better to [fork this repository](https://github.com/mathiasbynens/dotfiles/fork_select) instead, though.
+You could also use `~/.extra` to override settings, functions and aliases from my dotfiles repository. It’s probably better to [fork this repository](https://github.com/impressiver/dotfiles/fork_select) instead, though.
 
-### Sensible OS X defaults
+### Get comfortable in a hurry
 
-When setting up a new Mac, you may want to set some sensible OS X defaults:
+Run this script on a shiny new Mac (new machine, or a clean install of OS X) to get your environment back to the way you like it:
 
 ```bash
-./.osx
+./recipes/makeitmine.sh
+```
+
+### Install Development Apps
+
+Run this to install a bunch of common apps, tailored toward web development:
+
+```bash
+./recipes/dev.sh
 ```
 
 ### Install Homebrew formulae
 
-When setting up a new Mac, you may want to install some common Homebrew formulae (after installing Homebrew, of course):
+You may also want to install some common Homebrew formulae (after installing Homebrew, of course):
 
 ```bash
-./.brew
+./recipes/brew.sh
+```
+
+### Sensible OS X defaults
+
+You might want to tweak the default settings from time to time, it's OK to run this more than once:
+
+```bash
+./recipes/osx.sh
 ```
 
 ## Feedback
 
 Suggestions/improvements
-[welcome](https://github.com/mathiasbynens/dotfiles/issues)!
+[welcome](https://github.com/impressiver/dotfiles/issues)!
 
 ## Thanks to…
 
-* [Gianni Chiappetta](http://gf3.ca/) for sharing his [amazing collection of dotfiles](https://github.com/gf3/dotfiles)
-* [Matijs Brinkhuis](http://hotfusion.nl/) and his [homedir repository](https://github.com/matijs/homedir)
-* [Jan Moesen](http://jan.moesen.nu/) and his [ancient `.bash_profile`](https://gist.github.com/1156154) + [shiny tilde repository](https://github.com/janmoesen/tilde)
-* [Ben Alman](http://benalman.com/) and his [dotfiles repository](https://github.com/cowboy/dotfiles)
-* [Nicolas Gallagher](http://nicolasgallagher.com/) and his [dotfiles repository](https://github.com/necolas/dotfiles)
-* [Tom Ryder](http://blog.sanctum.geek.nz/) and his [dotfiles repository](https://github.com/tejr/dotfiles)
-* [Tim Esselens](http://devel.datif.be/)
-* anyone who [contributed a patch](https://github.com/mathiasbynens/dotfiles/contributors) or [made a helpful suggestion](https://github.com/mathiasbynens/dotfiles/issues)
+* [Mathias Bynens](http://mathiasbynens.be/) for building an awesome [dotfiles project](https://github.com/mathiasbynens/dotfiles).

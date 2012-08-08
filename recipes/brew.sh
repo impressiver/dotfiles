@@ -22,15 +22,13 @@ brew install wget --enable-iri
 
 # Install Python, pip, and virtualenv
 brew install python
-echo "Don’t forget to prefix $(brew --prefix)/bin to \$PATH in '~/.profile.'"
-easy_install pip
-pip install virtualenv
+echo "Don’t forget to prefix \$PATH with $(brew --prefix)/bin:/usr/local/bin:$(brew --prefix)/share/python in '~/.profile.'"
 
 # Install more recent versions of some OS X tools
 brew tap homebrew/dupes
 brew install homebrew/dupes/grep
-brew tap josegonzalez/homebrew-php
-brew install php54
+#brew tap josegonzalez/homebrew-php
+#brew install php54
 
 # These two formulae didn’t work well last time I tried them:
 #brew install homebrew/dupes/vim
