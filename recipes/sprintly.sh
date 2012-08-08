@@ -22,7 +22,6 @@ do
 		newdir=false
 	elif [[ ! -f $PROJECT_DIR ]]
 	then
-	    echo "Cool..."
 		newdir=true
 	fi
 done

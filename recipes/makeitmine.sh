@@ -8,45 +8,6 @@ DROPBOX_VERSION='1.4.12'
 
 cd "$(dirname "$0")"
 
-# Update dotfiles
-read -p "Would you like to update your dotfiles before we proceed? (y/n) " -n 1
-echo
-if [[ $REPLY =~ ^[Yy]$ ]]; then
-	bash '../bootstrap.sh'
-fi
-
-# OS X Defaults
-read -p "Would you like to set sensible system defaults? (y/n) " -n 1
-echo
-if [[ $REPLY =~ ^[Yy]$ ]]; then
-	bash './osx.sh'
-fi
-
-# Homebrew
-if [ ! -e /usr/local/bin/brew]; then
-	read -p "Would you like to install Homebrew? (y/n) " -n 1
-	echo
-	if [[ $REPLY =~ ^[Yy]$ ]]; then
-		ruby <(curl -fsSk https://raw.github.com/mxcl/homebrew/go)
-	fi
-fi
-
-# Useful Homebrew formulae
-read -p "Would you like to install common Homebrew formulae? (y/n) " -n 1
-	echo
-	if [[ $REPLY =~ ^[Yy]$ ]]; then
-		bash './brew.sh'
-	fi
-fi
-
-# Useful Homebrew formulae
-read -p "Would you like to install common development apps? (y/n) " -n 1
-	echo
-	if [[ $REPLY =~ ^[Yy]$ ]]; then
-		bash './dev.sh'
-	fi
-fi
-
 # Ask for the administrator password upfront
 echo "Please enter administrator password (sudo): "
 sudo -v
@@ -62,7 +23,7 @@ read -p "[Github] Email Address: " GIT_AUTHOR_EMAIL
 # Generate a ~/.extra file
 if [ -f $HOME/.extra ]
 then
-	ext = $(date +"%Y%m%d%H%M%s")
+	ext=$(date +"%Y%m%d%H%M%s")
 	echo "Backing up existing .extra file to '$HOME/.extra.$ext'"
 	mv $HOME/.extra $HOME/.extra.$ext
 fi
@@ -72,7 +33,6 @@ cat > $HOME/.extra << EOF
 export PATH="~/bin:\$PATH"
 
 # Git credentials
-# Not in the repository, to prevent people from accidentally committing under my name
 GIT_AUTHOR_NAME="$GIT_AUTHOR_NAME"
 GIT_AUTHOR_EMAIL="$GIT_AUTHOR_EMAIL"
 
@@ -84,8 +44,45 @@ git config --global user.email "\$GIT_AUTHOR_EMAIL"
 git config --global credential.helper osxkeychain
 EOF
 
-# Software Update (get all available updates)
+# OS X Software Update (get all available updates)
 sudo softwareupdate -i -a
+
+# Update dotfiles
+read -p "Would you like to update your dotfiles before we proceed? (y/n) " -n 1
+echo
+if [[ $REPLY =~ ^[Yy]$ ]]; then
+	bash '../bootstrap.sh'
+fi
+
+# OS X Defaults
+read -p "Would you like to set sensible system defaults? (y/n) " -n 1
+echo
+if [[ $REPLY =~ ^[Yy]$ ]]; then
+	bash './osx.sh'
+fi
+
+# Homebrew
+if [ ! -e /usr/local/bin/brew ]; then
+	read -p "Would you like to install Homebrew? (y/n) " -n 1
+	echo
+	if [[ $REPLY =~ ^[Yy]$ ]]; then
+		ruby <(curl -fsSk https://raw.github.com/mxcl/homebrew/go)
+	fi
+fi
+
+# Useful Homebrew formulae
+read -p "Would you like to install common Homebrew formulae? (y/n) " -n 1
+echo
+if [[ $REPLY =~ ^[Yy]$ ]]; then
+	bash './brew.sh'
+fi
+
+# Useful Homebrew formulae
+read -p "Would you like to install common development apps? (y/n) " -n 1
+echo
+if [[ $REPLY =~ ^[Yy]$ ]]; then
+	bash './dev.sh'
+fi
 
 # Google Chrome
 if [ ! -d /Applications/Google\ Chrome.app ];
@@ -122,6 +119,7 @@ echo "[Adobe Flash Player] Please follow the prompts. Waiting for Adobe Flash Pl
 open -W /Volumes/Flash\ Player/Install\ Adobe\ Flash\ Player.app
 hdiutil detach /Volumes/Flash\ Player
 
+# Sublime Text 2
 if [ ! -d /Applications/Sublime\ Text\ 2.app ];
 then
 	echo "\nInstalling Sublime Text 2"
@@ -131,6 +129,7 @@ else
 	echo "[Sublime Text 2] Sublime Text 2 is already installed"
 fi
 
+# Dropbox
 if [ ! -d /Applications/Dropbox.app ];
 then
 	echo "\nInstalling Dropbox"

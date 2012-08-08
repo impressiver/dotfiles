@@ -364,10 +364,10 @@ defaults write com.apple.DiskUtility DUDebugMenuEnabled -bool true
 defaults write com.apple.terminal StringEncodings -array 4
 
 # Use a modified version of the Pro theme by default in Terminal.app
-open "$HOME/init/Mathias.terminal"
+open "$HOME/init/Kappa.terminal"
 sleep 1 # Wait a bit to make sure the theme is loaded
-defaults write com.apple.Terminal "Default Window Settings" -string "Mathias"
-defaults write com.apple.Terminal "Startup Window Settings" -string "Mathias"
+defaults write com.apple.Terminal "Default Window Settings" -string "Kappa"
+defaults write com.apple.Terminal "Startup Window Settings" -string "Kappa"
 
 # Enable “focus follows mouse” for Terminal.app and all X11 apps
 # This means you can hover over a window and start typing in it without clicking first
@@ -414,7 +414,7 @@ defaults write com.twitter.twitter-mac HideInBackground -bool true
 ###############################################################################
 
 for app in "Address Book" "Contacts" "iCal" "Calendar" "Dock" "Finder" "Mail" \
-	"Safari" "iTunes" "SystemUIServer" "Terminal" "Twitter"; do
+	"Safari" "iTunes" "SystemUIServer" "Twitter"; do
 	killall "$app" > /dev/null 2>&1
 done
 echo "Done. Note that some of these changes require a logout/restart to take effect."
