@@ -8,7 +8,17 @@ brew upgrade
 
 # Install GNU core utilities (those that come with OS X are outdated)
 brew install coreutils
-echo "Don’t forget to add $(brew --prefix coreutils)/libexec/gnubin to \$PATH in '~/.profile'."
+#if [[ $PATH == *$(brew --prefix coreutils)/libexec/gnubin* ]]; then
+if [ -f "$HOME/.path" ]; then
+	if grep -q -e "$(brew --prefix coreutils)/libexec/gnubin" $HOME/.path; then
+		echo "'~/.path' already contains '$(brew --prefix coreutils)/libexec/gnubin'"
+	else
+		sed -i '.backup' "s#^export PATH=\(.*\)\$#export PATH=\1:$(brew --prefix coreutils)\/libexec\/gnubin#" $HOME/.path
+	fi
+else
+	echo "export PATH=\$PATH:$(brew --prefix coreutils)/libexec/gnubin" > $HOME/.path
+fi
+
 # Install GNU `find`, `locate`, `updatedb`, and `xargs`, g-prefixed
 brew install findutils
 
@@ -20,9 +30,18 @@ brew install wget --enable-iri
 #brew install ringojs
 #brew install narwhal
 
-# Install Python, pip, and virtualenv
+# Install Python
 brew install python
-echo "Don’t forget to prefix \$PATH with $(brew --prefix)/bin:/usr/local/bin:$(brew --prefix)/share/python in '~/.profile.'"
+#if [[ $PATH == *$(brew --prefix coreutils)/libexec/gnubin* ]]; then
+if [ -f "$HOME/.path" ]; then
+	if grep -q -e "$(brew --prefix)/bin:$(brew --prefix)/share/python" $HOME/.path; then
+		echo "'~/.path' already contains '$(brew --prefix)/bin:$(brew --prefix)/share/python'"
+	else
+		sed -i '.backup' "s#^export PATH=\(.*\)\$#export PATH=$(brew --prefix)\/bin:$(brew --prefix)\/share\/python:\1#" $HOME/.path
+	fi
+else
+	echo "export PATH=$(brew --prefix)/bin:$(brew --prefix)/share/python:\$PATH" > $HOME/.path
+fi
 
 # Install more recent versions of some OS X tools
 brew tap homebrew/dupes
@@ -48,3 +67,9 @@ brew install webkit2png
 
 # Remove outdated versions from the cellar
 brew cleanup
+
+# Source $PATH changes
+if [ -f "$HOME/.path" ]; then
+	source $HOME/.path
+	rm $HOME/.path.backup
+fi

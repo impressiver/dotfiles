@@ -34,30 +34,39 @@ read -p "Enter your AWS Access Key: " AWS_ACCESS_KEY
 read -p "Enter your AWS Secret: " AWS_SECRET
 
 # Setup snowbird (Sprint.ly website)
-git clone git@github.com:sagely/sprint.ly.git
+git clone https://github.com/sprintly/sprint.ly.git
+
+if [ ! -d $PROJECT_DIR/sprint.ly ]; then
+	echo "Failed to clone sprint.ly repo from 'https://github.com/sprintly/sprint.ly.git'"
+	exit 1
+fi
 
 # Create default overrides
 cat >> $PROJECT_DIR/sprint.ly/snowbird/overrides.m4 << EOF
-\# Here are your generated override settings for the Sprint.ly website.
-\# Please double check the values before continuing.
+# Here are your generated override settings for the Sprint.ly website.
+# Please double check the values before continuing.
 
-define(\`__AWS_KEY__\', \`$AWS_ACCESS_KEY\')
-define(\`__AWS_SECRET__\', \`$AWS_SECRET\')
-define(\`__DATABASE_USER__\', \`root\')
-define(\`__DATABASE_PASSWORD__\', \`\')
-define(\`__DATABASE_HOST__\', \`localhost\')
-define(\`__DATABASE_PORT__\', \`3306\')
-define(\`__DATABASE_ENGINE__\', \`mysql\')
-define(\`__DATABASE_NAME__\', \`sprintly_local\')
-define(\`__DATABASE_USER__\', \`root\')
+define(\`__AWS_KEY__', \`$AWS_ACCESS_KEY')
+define(\`__AWS_SECRET__', \`$AWS_SECRET')
+define(\`__DATABASE_NAME__', \`sprintly_local')
+define(\`__DATABASE_USER__', \`root')
+define(\`__DATABASE_PASSWORD__', \`')
+define(\`__DATABASE_HOST__', \`localhost')
+define(\`__DATABASE_PORT__', \`3306')
+define(\`__DATABASE_ENGINE__', \`mysql')
 EOF
 
 # Give a chance to modify the override values
 vim $PROJECT_DIR/sprint.ly/snowbird/overrides.m4
 
+echo "Setting up virtual environment..."
+cd $PROJECT_DIR
+mkvirtualenv --no-site-packages
+source venv/bin/activate
+
 echo "Building project..."
 cd $PROJECT_DIR/sprint.ly/snowbird
-make
+make all
 ./manage.py syncdb
 ./manage.py runserver 127.0.0.1:8000
 echo "Sprint.ly should now be available in your browser at: http://127.0.0.1:8000"

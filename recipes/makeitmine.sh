@@ -1,11 +1,5 @@
 #!/bin/bash
 
-# App Versions
-FIREFOX_VERSION='14.0.1'
-FLASH_PLAYER_VERSION='11.3.300.268'
-SUBLIME_TEXT_2_VERSION='2.0.1'
-DROPBOX_VERSION='1.4.12'
-
 cd "$(dirname "$0")"
 
 # Ask for the administrator password upfront
@@ -20,17 +14,20 @@ echo "When committing to Github, use these details as default:"
 read -p "[Github] Full name: " GIT_AUTHOR_NAME
 read -p "[Github] Email Address: " GIT_AUTHOR_EMAIL
 
-# Generate a ~/.extra file
+# Generate new ~/.extra file
+extra_path='~/bin:$PATH'
+
 if [ -f $HOME/.extra ]
 then
-	ext=$(date +"%Y-%m-%d.%H%M%s")
+	#ext=$(date +"%Y-%m-%d.%H%M%s")
+	ext='backup'
 	echo "Backing up existing .extra file to '$HOME/.extra.$ext'"
 	mv $HOME/.extra $HOME/.extra.$ext
 fi
 
 cat > $HOME/.extra << EOF
 # PATH additions
-export PATH="~/bin:\$PATH"
+export PATH=$extra_path
 
 # Git credentials
 GIT_AUTHOR_NAME="$GIT_AUTHOR_NAME"
@@ -43,6 +40,7 @@ git config --global user.name "\$GIT_AUTHOR_NAME"
 git config --global user.email "\$GIT_AUTHOR_EMAIL"
 git config --global credential.helper osxkeychain
 EOF
+source $HOME/.extra
 
 # OS X Software Update (get all available updates)
 sudo softwareupdate -i -a
@@ -82,63 +80,5 @@ read -p "Would you like to install common development apps? (y/n) " -n 1
 echo
 if [[ $REPLY =~ ^[Yy]$ ]]; then
 	bash './dev.sh'
-fi
-
-# Google Chrome
-if [ ! -d /Applications/Google\ Chrome.app ];
-then
-	echo "Installing Google Chrome"
-	hdiutil attach https://dl.google.com/chrome/mac/stable/GGRO/googlechrome.dmg
-	cp -R /Volumes/Google\ Chrome/Google\ Chrome.app /Applications/
-	hdiutil detach /Volumes/Google\ Chrome
-else
-	echo "[Google Chrome] Chrome is already installed."
-fi
-echo "[Google Chrome] Don’t forget to install extensions: REST Console, Speed Tracer (https://chrome.google.com/webstore/category/home)"
-
-# Mozilla Firefox
-if [ ! -d /Applications/Firefox.app ];
-then
-	echo "\nInstalling Mozilla Firefox"
-	hdiutil attach http://download.cdn.mozilla.net/pub/mozilla.org/firefox/releases/$FIREFOX_VERSION/mac/en-US/Firefox%20$FIREFOX_VERSION.dmg
-	cp -R /Volumes/Firefox/Firefox.app /Applications/
-	hdiutil detach /Volumes/Firefox
-	cd /tmp/
-	curl -LO https://addons.mozilla.org/firefox/downloads/latest/1843/addon-1843-latest.xpi
-	cd -
-	/Applications/Firefox.app/Contents/MacOS/firefox -install-global-extension /tmp/addon-1843-latest.xpi
-else
-	echo "[Mozilla Firefox] Firefox is already installed."
-fi
-echo "[Mozilla Firefox] Don't forget to enable Firebug extensions: Eventbug, NetExport, and FBTrace (https://getfirebug.com/swarms/Firefox-14.0/)"
-
-# Adobe Flash Player (and browser plugins)
-echo "\nInstalling Adobe Flash Player"
-hdiutil attach http://fpdownload.macromedia.com/get/flashplayer/pdc/$FLASH_PLAYER_VERSION/install_flash_player_osx.dmg
-echo "[Adobe Flash Player] Please follow the prompts. Waiting for Adobe Flash Player installer to quit..."
-open -W /Volumes/Flash\ Player/Install\ Adobe\ Flash\ Player.app
-hdiutil detach /Volumes/Flash\ Player
-
-# Sublime Text 2
-if [ ! -d /Applications/Sublime\ Text\ 2.app ];
-then
-	echo "\nInstalling Sublime Text 2"
-	hdiutil attach http://c758482.r82.cf2.rackcdn.com/Sublime%20Text%20$SUBLIME_TEXT_2_VERSION.dmg
-	cp -R /Volumes/Sublime\ Text\ 2/Sublime\ Text\ 2.app /Applications/
-else
-	echo "[Sublime Text 2] Sublime Text 2 is already installed"
-fi
-
-# Dropbox
-if [ ! -d /Applications/Dropbox.app ];
-then
-	echo "\nInstalling Dropbox"
-	curl -O http://dl-web.dropbox.com/u/17/b/Dropbox%20$DROPBOX_VERSION.dmg
-	hdiutil attach Dropbox%20$DROPBOX_VERSION.dmg
-	echo "[Dropbox] Please follow the prompts. Waiting for Dropbox installer to quit..."
-	open -W /Volumes/Dropbox\ Installer/Dropbox.app
-	hdiutil detach /Volumes/Dropbox\ Installer
-else
-	echo "[Dropbox] Dropbox is already installed"
 fi
 

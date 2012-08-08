@@ -366,6 +366,8 @@ defaults write com.apple.terminal StringEncodings -array 4
 # Use a modified version of the Pro theme by default in Terminal.app
 open "$HOME/init/Kappa.terminal"
 sleep 1 # Wait a bit to make sure the theme is loaded
+osascript -e 'tell application "Terminal" to close window 1'
+
 defaults write com.apple.Terminal "Default Window Settings" -string "Kappa"
 defaults write com.apple.Terminal "Startup Window Settings" -string "Kappa"
 
@@ -417,4 +419,6 @@ for app in "Address Book" "Contacts" "iCal" "Calendar" "Dock" "Finder" "Mail" \
 	"Safari" "iTunes" "SystemUIServer" "Twitter"; do
 	killall "$app" > /dev/null 2>&1
 done
+osascript -e 'tell application "Terminal" to activate'
+
 echo "Done. Note that some of these changes require a logout/restart to take effect."
