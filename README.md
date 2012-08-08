@@ -54,8 +54,8 @@ export PATH="~/bin:$PATH"
 
 # Git credentials
 # Not in the repository, to prevent people from accidentally committing under my name
-GIT_AUTHOR_NAME="Ian White"
-GIT_AUTHOR_EMAIL="ian@impressiver.com"
+GIT_AUTHOR_NAME="<Your Name>"
+GIT_AUTHOR_EMAIL="<Your Email Address>"
 
 GIT_COMMITTER_NAME="$GIT_AUTHOR_NAME"
 GIT_COMMITTER_EMAIL="$GIT_AUTHOR_EMAIL"

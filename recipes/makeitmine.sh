@@ -23,7 +23,7 @@ read -p "[Github] Email Address: " GIT_AUTHOR_EMAIL
 # Generate a ~/.extra file
 if [ -f $HOME/.extra ]
 then
-	ext=$(date +"%Y%m%d%H%M%s")
+	ext=$(date +"%Y-%m-%d.%H%M%s")
 	echo "Backing up existing .extra file to '$HOME/.extra.$ext'"
 	mv $HOME/.extra $HOME/.extra.$ext
 fi
@@ -77,7 +77,7 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
 	bash './brew.sh'
 fi
 
-# Useful Homebrew formulae
+# Useful dev apps
 read -p "Would you like to install common development apps? (y/n) " -n 1
 echo
 if [[ $REPLY =~ ^[Yy]$ ]]; then
