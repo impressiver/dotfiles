@@ -1,12 +1,17 @@
 #!/bin/bash
 
 DEFAULT_PROJECT_DIR=$HOME/Projects/Sprint.ly/git
+DEFAULT_DATABASE_NAME='sprintly_local'
+DEFAULT_DATABASE_USER='root'
+DEFAULT_DATABASE_PASSWORD=''
+DEFAULT_DATABASE_HOST='localhost'
+DEFAULT_DATABASE_PORT='3306'
 
 PROJECT_DIR=$DEFAULT_PROJECT_DIR
 newdir=false
 while ! $newdir
 do
-	read -e -p "Where would you like to clone the Sprint.ly Github repos? [$DEFAULT_PROJECT_DIR]: " PROJECT_DIR
+	read -e -p "Where would you like to clone the Sprint.ly Github repos? [$DEFAULT_PROJECT_DIR] " PROJECT_DIR
 	if [ "$PROJECT_DIR" = "" ]
 	then
 		PROJECT_DIR=$DEFAULT_PROJECT_DIR
@@ -32,6 +37,17 @@ cd $PROJECT_DIR
 # Ask for some settings up front
 read -p "Enter your AWS Access Key: " AWS_ACCESS_KEY
 read -p "Enter your AWS Secret: " AWS_SECRET
+read -p "Enter MySQL database name (wil be created if it doesn't exit): ['$DEFAULT_DATABASE_NAME'] " DATABASE_NAME
+read -p "Enter MySQL user: ['$DEFAULT_DATABASE_USER'] " DATABASE_USER
+read -p "Enter MySQL password: ['$DEFAULT_DATABASE_PASSWORD'] " DATABASE_PASSWORD
+read -p "Enter MySQL host: ['$DEFAULT_DATABASE_HOST'] " DATABASE_HOST
+read -p "Enter MySQL port: ['$DEFAULT_DATABASE_PORT'] " DATABASE_PORT
+
+dbname=${DATABASE_NAME:-$DEFAULT_DATABASE_NAME}
+dbuser=${DATABASE_USER:-$DEFAULT_DATABASE_USER}
+dbpass=${DATABASE_PASSWORD:-$DEFAULT_DATABASE_PASSWORD}
+dbhost=${DATABASE_HOST:-$DEFAULT_DATABASE_HOST}
+dbport=${DATABASE_PORT:-$DEFAULT_DATABASE_PORT}
 
 # Setup snowbird (Sprint.ly website)
 git clone https://github.com/sprintly/sprint.ly.git
@@ -48,26 +64,40 @@ cat >> $PROJECT_DIR/sprint.ly/snowbird/overrides.m4 << EOF
 
 define(\`__AWS_KEY__', \`$AWS_ACCESS_KEY')
 define(\`__AWS_SECRET__', \`$AWS_SECRET')
-define(\`__DATABASE_NAME__', \`sprintly_local')
-define(\`__DATABASE_USER__', \`root')
-define(\`__DATABASE_PASSWORD__', \`')
-define(\`__DATABASE_HOST__', \`localhost')
-define(\`__DATABASE_PORT__', \`3306')
+define(\`__DATABASE_NAME__', \`"$dbname"')
+define(\`__DATABASE_USER__', \`$dbuser')
+define(\`__DATABASE_PASSWORD__', \`$dbpass')
+define(\`__DATABASE_HOST__', \`$dbhost')
+define(\`__DATABASE_PORT__', \`$dbport')
 define(\`__DATABASE_ENGINE__', \`mysql')
 EOF
 
 # Give a chance to modify the override values
 vim $PROJECT_DIR/sprint.ly/snowbird/overrides.m4
+# Now get rid of the comments so m4 won't pass them on
+sed -i '.backup' '/^#.*$/d' $PROJECT_DIR/sprint.ly/snowbird/overrides.m4
+rm $PROJECT_DIR/sprint.ly/snowbird/overrides.m4.backup
 
 echo "Setting up virtual environment..."
-cd $PROJECT_DIR
-mkvirtualenv --no-site-packages
-source venv/bin/activate
+source /usr/local/share/python/virtualenvwrapper.sh
+mkvirtualenv snowbird
+workon snowbird
+
+pip install -r $PROJECT_DIR/sprint.ly/snowbird/requirements-local.txt
+
+echo "Creating database '$dbname'"
+if [ -z "$dbpass" ]; then
+	mysqladmin --user=$dbuser --password=$dbpass --host=$dbhost create $dbname
+else
+	mysqladmin --user=$dbuser --host=$dbhost create $dbname
+fi
 
 echo "Building project..."
 cd $PROJECT_DIR/sprint.ly/snowbird
 make all
-./manage.py syncdb
+./manage.py syncdb --noinput
+./manage.py migrate
+./manage.py createsuperuser
 ./manage.py runserver 127.0.0.1:8000
 echo "Sprint.ly should now be available in your browser at: http://127.0.0.1:8000"
 
