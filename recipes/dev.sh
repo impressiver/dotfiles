@@ -106,6 +106,7 @@ if [ ! -d /Applications/Sublime\ Text\ 2.app ]; then
 	echo "\nInstalling Sublime Text 2"
 	hdiutil attach http://c758482.r82.cf2.rackcdn.com/Sublime%20Text%20$SUBLIME_TEXT_2_VERSION.dmg
 	cp -R /Volumes/Sublime\ Text\ 2/Sublime\ Text\ 2.app /Applications/
+	mkdir -p $HOME/bin
 	ln -s "/Applications/Sublime Text 2.app/Contents/SharedSupport/bin/subl" $HOME/bin/subl
 else
 	echo "[Sublime Text 2] Sublime Text 2 is already installed"
