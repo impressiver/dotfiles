@@ -6,52 +6,94 @@ TEXTMATE_VERSION='1.5.11_r1635'
 DROPBOX_VERSION='1.4.12'
 ADIUM_VERSION='1.5.2'
 
+INSTALLED_FORMULAE=$(brew list)
+# Functions return exit codes; 0 means OK.
+TRUE=0
+FALSE=1
+
+function install(){
+	local formula=$1
+	local title=${2:-$formula}
+	local args=$3
+
+	if [[ ! "$INSTALLED_FORMULAE" == *$formula* ]]; then
+		echo "Installing $title"
+		brew install $formula $args
+
+		return $TRUE
+	else
+		echo "$title already installed"
+		return $FALSE
+	fi
+
+	return $FALSE
+}
+
 ### CLI Apps ###
 
 # We're going to need this later
 mkdir -p $HOME/Library/LaunchAgents
 
 # "Hub" for Github (http://defunkt.io/hub/)
-brew install hub
+install 'hub' 'Hub'
 
 # Python: Install pip, virtualenv, and virtualenvwrapper
-easy_install pip
-pip install virtualenv
-pip install virtualenvwrapper
-#if [ ! -z "$WORKON_HOME" ]; then
-if grep -q -e "^WORKON_HOME=" $HOME/.extra; then
-	echo "\$WORKON_HOME already set in '~/.extra'"
+if [ ! -e /usr/local/bin/python ]; then
+	echo "Skipping virtualenv setup. Python was not installed by Homebrew."
 else
-	echo -e "\n# virtualenvwrapper" >> $HOME/.extra
-	echo "export WORKON_HOME=~/.virtualenvs" >> $HOME/.extra
-	echo "export PROJECT_HOME=~/Projects" >> $HOME/.extra
-	echo "source virtualenvwrapper_lazy.sh" >> $HOME/.extra
-fi
-mkdir -p $HOME/.virtualenvs
-source $HOME/.extra
-source virtualenvwrapper.sh
+	if [ ! -e /usr/local/share/python/pip ]; then
+		echo "Installing pip"
+		easy_install pip
+	fi
 
-exit 0
+	installed_packages=$(pip freeze)
+
+	if [[ ! "$installed_packages" == *virtualenv* ]]; then
+		echo "Installing virtualenv"
+		pip install virtualenv
+	fi
+
+	if [[ ! "$installed_packages" == *virtualenvwrapper* ]]; then
+		echo "Installing virtualenvwrapper"
+		pip install virtualenvwrapper
+
+		if grep -q -e "^WORKON_HOME=" $HOME/.extra; then
+			echo "\$WORKON_HOME already set in '~/.extra'"
+		else
+			echo -e "\n# virtualenvwrapper" >> $HOME/.extra
+			echo "export WORKON_HOME=~/.virtualenvs" >> $HOME/.extra
+			echo "export PROJECT_HOME=~/Projects" >> $HOME/.extra
+			echo "source virtualenvwrapper_lazy.sh" >> $HOME/.extra
+		fi
+
+		mkdir -p $HOME/.virtualenvs
+		source $HOME/.extra
+		source virtualenvwrapper.sh
+	fi
+fi
 
 # Install MySQL and set to launch at startup
-brew install mysql
-unset TMPDIR
-mysql_install_db --verbose --user=`whoami` --basedir="$(brew --prefix mysql)" --datadir=/usr/local/var/mysql --tmpdir=/tmp
-cp /usr/local/Cellar/mysql/5.5.25a/homebrew.mxcl.mysql.plist $HOME/Library/LaunchAgents/
-launchctl load -w $HOME/Library/LaunchAgents/homebrew.mxcl.mysql.plist
-# TODO: Ask for MySQL root Password:
-#/usr/local/Cellar/mysql/5.5.25a/bin/mysqladmin -u root password 'new-password'
-#/usr/local/Cellar/mysql/5.5.25a/bin/mysqladmin -u root -h Animal Retina Pro password 'new-password'
+if install 'mysql'; then
+	unset TMPDIR
+	mysql_install_db --verbose --user=`whoami` --basedir="$(brew --prefix mysql)" --datadir=/usr/local/var/mysql --tmpdir=/tmp
+	cp /usr/local/Cellar/mysql/5.5.25a/homebrew.mxcl.mysql.plist $HOME/Library/LaunchAgents/
+	launchctl load -w $HOME/Library/LaunchAgents/homebrew.mxcl.mysql.plist
+	# TODO: Ask for MySQL root Password:
+	#/usr/local/Cellar/mysql/5.5.25a/bin/mysqladmin -u root password 'new-password'
+	#/usr/local/Cellar/mysql/5.5.25a/bin/mysqladmin -u root -h Animal Retina Pro password 'new-password'
+fi
 
 # Memcached
-brew install memcached
-cp /usr/local/Cellar/memcached/1.4.14/homebrew.mxcl.memcached.plist $HOME/Library/LaunchAgents/
-launchctl load -w $HOME/Library/LaunchAgents/homebrew.mxcl.memcached.plist
+if install 'memcached'; then
+	cp /usr/local/Cellar/memcached/1.4.14/homebrew.mxcl.memcached.plist $HOME/Library/LaunchAgents/
+	launchctl load -w $HOME/Library/LaunchAgents/homebrew.mxcl.memcached.plist
+fi
 
 # Redis
-brew install redis
-cp /usr/local/Cellar/redis/2.4.16/homebrew.mxcl.redis.plist $HOME/Library/LaunchAgents/
-launchctl load -w $HOME/Library/LaunchAgents/homebrew.mxcl.redis.plist
+# if install 'redis'; then
+# 	cp /usr/local/Cellar/redis/2.4.16/homebrew.mxcl.redis.plist $HOME/Library/LaunchAgents/
+# 	launchctl load -w $HOME/Library/LaunchAgents/homebrew.mxcl.redis.plist
+# fi
 
 # npm
 #curl https://npmjs.org/install.sh | sh
@@ -75,7 +117,7 @@ if [ ! -d /Applications/Google\ Chrome.app ]; then
 	cp -R /Volumes/Google\ Chrome/Google\ Chrome.app /Applications/
 	hdiutil detach /Volumes/Google\ Chrome
 else
-	echo "[Google Chrome] Chrome is already installed"
+	echo "Chrome is already installed"
 fi
 echo "[Google Chrome] Don’t forget to install extensions: REST Console, Speed Tracer (https://chrome.google.com/webstore/category/home)"
 
@@ -90,12 +132,12 @@ if [ ! -d /Applications/Firefox.app ]; then
 	cd -
 	/Applications/Firefox.app/Contents/MacOS/firefox -install-global-extension /tmp/addon-1843-latest.xpi
 else
-	echo "[Mozilla Firefox] Firefox is already installed"
+	echo "Firefox is already installed"
 fi
 echo "[Mozilla Firefox] Don't forget to enable Firebug extensions: Eventbug, NetExport, and FBTrace (https://getfirebug.com/swarms/Firefox-14.0/)"
 
 # Adobe Flash Player (and browser plugins)
-echo "\nInstalling Adobe Flash Player"
+echo "Installing Adobe Flash Player"
 hdiutil attach http://fpdownload.macromedia.com/get/flashplayer/pdc/$FLASH_PLAYER_VERSION/install_flash_player_osx.dmg
 echo "[Adobe Flash Player] Please follow the prompts. Waiting for Adobe Flash Player installer to quit..."
 open -W /Volumes/Flash\ Player/Install\ Adobe\ Flash\ Player.app
@@ -109,7 +151,7 @@ if [ ! -d /Applications/Sublime\ Text\ 2.app ]; then
 	mkdir -p $HOME/bin
 	ln -s "/Applications/Sublime Text 2.app/Contents/SharedSupport/bin/subl" $HOME/bin/subl
 else
-	echo "[Sublime Text 2] Sublime Text 2 is already installed"
+	echo "Sublime Text 2 is already installed"
 fi
 
 # TextMate
@@ -120,7 +162,7 @@ if [ ! -d /Applications/TextMate.app ]; then
 	unzip /tmp/TextMate_$TEXTMATE_VERSION.zip -d /Applications
 	cd -
 else
-	echo "[TextMate] TextMate is already installed"
+	echo "TextMate is already installed"
 fi
 
 
@@ -135,7 +177,7 @@ if [ ! -d /Applications/Dropbox.app ]; then
 	open -W /Volumes/Dropbox\ Installer/Dropbox.app
 	hdiutil detach /Volumes/Dropbox\ Installer
 else
-	echo "[Dropbox] Dropbox is already installed"
+	echo "Dropbox is already installed"
 fi
 
 # Adium
@@ -144,6 +186,6 @@ if [ ! -d /Applications/Adium.app ]; then
 	hdiutil attach http://iweb.dl.sourceforge.net/project/adium/Adium_$ADIUM_VERSION.dmg
 	cp -R /Volumes/Adium\ $ADIUM_VERSION/Adium.app /Applications/
 else
-	echo "[Adium] Adium is already installed"
+	echo "Adium is already installed"
 fi
 

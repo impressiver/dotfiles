@@ -1,5 +1,16 @@
 #!/bin/bash
 
+# Run these recipes after config has completed
+ADDITIONAL_RECIPES=('prefs.sh', 'sprintly.sh');
+
+# Build default values based on previous values
+if [ -f $HOME/.extra ]; then
+	source $HOME/.extra
+fi
+
+DEFAULT_GIT_AUTHOR_NAME=$GIT_AUTHOR_NAME
+DEFAULT_GIT_AUTHOR_EMAIL=$GIT_AUTHOR_EMAIL
+
 cd "$(dirname "$0")"
 
 # Ask for the administrator password upfront
@@ -11,8 +22,11 @@ while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
 
 # Get user info up front
 echo "When committing to Github, use these details as default:"
-read -p "[Github] Full name: " GIT_AUTHOR_NAME
-read -p "[Github] Email Address: " GIT_AUTHOR_EMAIL
+read -p "[Github] Full name: ($DEFAULT_GIT_AUTHOR_NAME) " GIT_AUTHOR_NAME
+read -p "[Github] Email Address: ($DEFAULT_GIT_AUTHOR_EMAIL) " GIT_AUTHOR_EMAIL
+
+gitauthor=${GIT_AUTHOR_NAME:-$DEFAULT_GIT_AUTHOR_NAME}
+gitemail=${GIT_AUTHOR_EMAIL:-$DEFAULT_GIT_AUTHOR_EMAIL}
 
 # Generate new ~/.extra file
 extra_path='~/bin:$PATH'
@@ -20,7 +34,7 @@ extra_path='~/bin:$PATH'
 if [ -f $HOME/.extra ]
 then
 	#ext=$(date +"%Y-%m-%d.%H%M%s")
-	ext='backup'
+	ext="backup-$(date +"%Y-%m-%d-%s")"
 	echo "Backing up existing .extra file to '$HOME/.extra.$ext'"
 	mv $HOME/.extra $HOME/.extra.$ext
 fi
@@ -30,8 +44,8 @@ cat > $HOME/.extra << EOF
 export PATH=$extra_path
 
 # Git credentials
-GIT_AUTHOR_NAME="$GIT_AUTHOR_NAME"
-GIT_AUTHOR_EMAIL="$GIT_AUTHOR_EMAIL"
+GIT_AUTHOR_NAME="$gitname"
+GIT_AUTHOR_EMAIL="$gitemail"
 
 GIT_COMMITTER_NAME="\$GIT_AUTHOR_NAME"
 GIT_COMMITTER_EMAIL="\$GIT_AUTHOR_EMAIL"
@@ -82,3 +96,7 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
 	bash './dev.sh'
 fi
 
+# Now run additional recipes
+for i in "${ADDITIONAL_RECIPES[@]}"; do
+	bash "./$i"
+done
