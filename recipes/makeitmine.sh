@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Run these recipes after config has completed
-ADDITIONAL_RECIPES=('prefs.sh', 'sprintly.sh');
+ADDITIONAL_RECIPES=('prefs.sh' 'sprintly.sh');
 
 # Build default values based on previous values
 if [ -f $HOME/.extra ]; then
@@ -44,7 +44,7 @@ cat > $HOME/.extra << EOF
 export PATH=$extra_path
 
 # Git credentials
-GIT_AUTHOR_NAME="$gitname"
+GIT_AUTHOR_NAME="$gitauthor"
 GIT_AUTHOR_EMAIL="$gitemail"
 
 GIT_COMMITTER_NAME="\$GIT_AUTHOR_NAME"

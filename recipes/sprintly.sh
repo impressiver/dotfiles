@@ -55,7 +55,7 @@ read -p "Enter MySQL port: ['$DEFAULT_DATABASE_PORT'] " DATABASE_PORT
 gitauthor=${GIT_AUTHOR_NAME:-$DEFAULT_GIT_AUTHOR_NAME}
 gitemail=${GIT_AUTHOR_EMAIL:-$DEFAULT_GIT_AUTHOR_EMAIL}
 
-apikey=SPRINTLY_API_KEY
+apikey=$SPRINTLY_API_KEY
 
 dbname=${DATABASE_NAME:-$DEFAULT_DATABASE_NAME}
 dbuser=${DATABASE_USER:-$DEFAULT_DATABASE_USER}
@@ -68,14 +68,19 @@ echo "Installing Sprint.ly-Github CLI..."
 curl -O https://raw.github.com/nextbigsoundinc/Sprintly-GitHub/master/sprintly
 sudo python sprintly --install
 rm sprintly
+mkdir -p $HOME/.sprintly
+echo "{\"user\": \"$gitemail\", \"key\": \"$apikey\"}" > $HOME/.sprintly/sprintly.config
+sprintly
 
 # Clone the project (Sprint.ly website)
 git clone https://github.com/sprintly/sprint.ly.git
 
-if [ ! -d $PROJECT_DIR/sprint.ly ]; then
+if [ ! -d "$PROJECT_DIR/sprint.ly" ]; then
 	echo "Failed to clone sprint.ly repo from 'https://github.com/sprintly/sprint.ly.git'"
 	exit 1
 fi
+
+cd "$PROJECT_DIR/sprint.ly"
 
 # Set the Github author and email
 git config user.name "$gitauthor"
@@ -122,7 +127,7 @@ make all
 ./manage.py syncdb --noinput
 ./manage.py migrate
 ./manage.py createsuperuser
-./manage.py runserver 127.0.0.1:8000
+./manage.py runserver 127.0.0.1:8000 &
 echo "Sprint.ly should now be available in your browser at: http://127.0.0.1:8000"
 
 # Configure ssh

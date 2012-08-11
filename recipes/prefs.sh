@@ -1,5 +1,4 @@
 #!/bin/bash
-cd "$(dirname "$0")"
 
 DEFAULT_SHARED_PREFERENCES_DIR="$HOME/Dropbox/.dotfiles/Library/Application Support"
 

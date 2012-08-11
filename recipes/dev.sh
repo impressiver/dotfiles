@@ -56,20 +56,20 @@ else
 	if [[ ! "$installed_packages" == *virtualenvwrapper* ]]; then
 		echo "Installing virtualenvwrapper"
 		pip install virtualenvwrapper
-
-		if grep -q -e "^WORKON_HOME=" $HOME/.extra; then
-			echo "\$WORKON_HOME already set in '~/.extra'"
-		else
-			echo -e "\n# virtualenvwrapper" >> $HOME/.extra
-			echo "export WORKON_HOME=~/.virtualenvs" >> $HOME/.extra
-			echo "export PROJECT_HOME=~/Projects" >> $HOME/.extra
-			echo "source virtualenvwrapper_lazy.sh" >> $HOME/.extra
-		fi
-
-		mkdir -p $HOME/.virtualenvs
-		source $HOME/.extra
-		source virtualenvwrapper.sh
 	fi
+
+	if grep -q -e "^WORKON_HOME=" $HOME/.extra; then
+		echo "\$WORKON_HOME already set in '~/.extra'"
+	else
+		echo -e "\n# virtualenvwrapper" >> $HOME/.extra
+		echo "export WORKON_HOME=~/.virtualenvs" >> $HOME/.extra
+		echo "export PROJECT_HOME=~/Projects" >> $HOME/.extra
+		echo "source virtualenvwrapper_lazy.sh" >> $HOME/.extra
+	fi
+
+	mkdir -p $HOME/.virtualenvs
+	source $HOME/.extra
+	source virtualenvwrapper.sh
 fi
 
 # Install MySQL and set to launch at startup
