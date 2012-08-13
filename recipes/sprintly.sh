@@ -67,6 +67,7 @@ dbport=${DATABASE_PORT:-$DEFAULT_DATABASE_PORT}
 echo "Installing Sprint.ly-Github CLI..."
 curl -O https://raw.github.com/nextbigsoundinc/Sprintly-GitHub/master/sprintly
 sudo python sprintly --install
+sudo chown $(whoami):admin /usr/local/sprintly
 rm sprintly
 mkdir -p $HOME/.sprintly
 echo "{\"user\": \"$gitemail\", \"key\": \"$apikey\"}" > $HOME/.sprintly/sprintly.config
