@@ -110,6 +110,9 @@ fi
 # npm
 #curl https://npmjs.org/install.sh | sh
 #export NODE_PATH=/usr/local/lib/node_modules
+#echo -e "\n# npm" >> $HOME/.extra
+#echo "export NODE_PATH=/usr/local/lib/node_modules" >> $HOME/.extra
+# Some also suggest adding '/usr/local/share/npm/bin' to $PATH
 
 # RCEnvironment (http://www.rubicode.com/Software/RCEnvironment/)
 # if [ ! -d $HOME/Library/PreferencePanes/RCEnvironment.prefPane ]; then
