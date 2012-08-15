@@ -42,7 +42,7 @@ Here’s an example `~/.path` file that adds `~/bin` to the `$PATH`:
 export PATH="$HOME/bin:$PATH"
 ```
 
-### Add custom commands without creating a new fork
+### Add custom commands without creating a new fork sss
 
 If `~/.extra` exists, it will be sourced along with the other files. You can use this to add a few custom commands without the need to fork this entire repository, or to add commands you don’t want to commit to a public repository.
 
@@ -69,7 +69,7 @@ You could also use `~/.extra` to override settings, functions and aliases from m
 
 ### Get comfortable in a hurry
 
-Run this script on a shiny new Mac (new machine, or a clean install of OS X) to get your environment back to the way you like it:
+Run this script on a shiny new Mac (new machine, or a clean install of OS X) to get your environment set up the way you like it. This is the kitchen-sink script, it runs all the other scripts after updating your dotfiles:
 
 ```bash
 ./recipes/makeitmine.sh
@@ -77,7 +77,7 @@ Run this script on a shiny new Mac (new machine, or a clean install of OS X) to 
 
 ### Install Development Apps
 
-Run this to install a bunch of common apps, tailored toward web development:
+Run this to install a bunch of common apps (both CLI and Desktop), tailored toward web development:
 
 ```bash
 ./recipes/dev.sh
@@ -97,6 +97,14 @@ You might want to tweak the default settings from time to time, it's OK to run t
 
 ```bash
 ./recipes/osx.sh
+```
+
+### Shared Preferences
+
+If you use Dropbox, or any other cloud sync service, you can share preferences across machines using this recipe. It will individually copy app prefs in `$HOME/Dropbox/.dotfiles/Library/Application Support` to `$HOME/Library/Application Support` (after making a backup, just in case):
+
+```bash
+./recipes/prefs.sh
 ```
 
 ## Feedback
