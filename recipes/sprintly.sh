@@ -1,4 +1,5 @@
 #!/bin/bash
+# Ensure the following are installed: git, mysql, node, virtualenv, virtualenvwrapper
 
 if [ -f $HOME/.extra ]; then
 	source $HOME/.extra
