@@ -88,7 +88,7 @@ git config user.name "$gitauthor"
 git config user.email "$gitemail"
 
 # Create default overrides
-cat >> $PROJECT_DIR/sprint.ly/snowbird/overrides.m4 << EOF
+cat >> $PROJECT_DIR/sprint.ly/m4/overrides.m4 << EOF
 # Here are your generated override settings for the Sprint.ly website.
 # Please double check the values before continuing.
 
@@ -103,10 +103,10 @@ define(\`__DATABASE_ENGINE__', \`mysql')
 EOF
 
 # Give a chance to modify the override values
-vim $PROJECT_DIR/sprint.ly/snowbird/overrides.m4
+vim $PROJECT_DIR/sprint.ly/m4/overrides.m4
 # Now get rid of the comments so m4 won't pass them on
-sed -i '.backup' '/^#.*$/d' $PROJECT_DIR/sprint.ly/snowbird/overrides.m4
-rm $PROJECT_DIR/sprint.ly/snowbird/overrides.m4.backup
+sed -i '.backup' '/^#.*$/d' $PROJECT_DIR/sprint.ly/m4/overrides.m4
+rm $PROJECT_DIR/sprint.ly/m4/overrides.m4.backup
 
 echo "Setting up virtual environment ('snowbird')..."
 source /usr/local/share/python/virtualenvwrapper.sh
