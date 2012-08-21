@@ -103,7 +103,7 @@ define(\`__DATABASE_ENGINE__', \`mysql')
 EOF
 
 # Give a chance to modify the override values
-vim $PROJECT_DIR/sprint.ly/m4/overrides.m4
+$EDITOR $PROJECT_DIR/sprint.ly/m4/overrides.m4
 # Now get rid of the comments so m4 won't pass them on
 sed -i '.backup' '/^#.*$/d' $PROJECT_DIR/sprint.ly/m4/overrides.m4
 rm $PROJECT_DIR/sprint.ly/m4/overrides.m4.backup
