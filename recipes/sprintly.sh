@@ -1,4 +1,5 @@
 #!/bin/bash
+# Ensure the following are installed: git, mysql, node, virtualenv, virtualenvwrapper
 
 if [ -f $HOME/.extra ]; then
 	source $HOME/.extra
@@ -67,7 +68,7 @@ dbport=${DATABASE_PORT:-$DEFAULT_DATABASE_PORT}
 echo "Installing Sprint.ly-Github CLI..."
 curl -O https://raw.github.com/nextbigsoundinc/Sprintly-GitHub/master/sprintly
 sudo python sprintly --install
-sudo chown $(whoami):admin /usr/local/sprintly
+sudo chown $(whoami):admin /usr/local/bin/sprintly
 rm sprintly
 mkdir -p $HOME/.sprintly
 echo "{\"user\": \"$gitemail\", \"key\": \"$apikey\"}" > $HOME/.sprintly/sprintly.config
@@ -88,7 +89,7 @@ git config user.name "$gitauthor"
 git config user.email "$gitemail"
 
 # Create default overrides
-cat >> $PROJECT_DIR/sprint.ly/snowbird/overrides.m4 << EOF
+cat >> $PROJECT_DIR/sprint.ly/m4/overrides.m4 << EOF
 # Here are your generated override settings for the Sprint.ly website.
 # Please double check the values before continuing.
 
@@ -103,10 +104,10 @@ define(\`__DATABASE_ENGINE__', \`mysql')
 EOF
 
 # Give a chance to modify the override values
-vim $PROJECT_DIR/sprint.ly/snowbird/overrides.m4
+$EDITOR $PROJECT_DIR/sprint.ly/m4/overrides.m4
 # Now get rid of the comments so m4 won't pass them on
-sed -i '.backup' '/^#.*$/d' $PROJECT_DIR/sprint.ly/snowbird/overrides.m4
-rm $PROJECT_DIR/sprint.ly/snowbird/overrides.m4.backup
+sed -i '.backup' '/^#.*$/d' $PROJECT_DIR/sprint.ly/m4/overrides.m4
+rm $PROJECT_DIR/sprint.ly/m4/overrides.m4.backup
 
 echo "Setting up virtual environment ('snowbird')..."
 source /usr/local/share/python/virtualenvwrapper.sh
