@@ -75,12 +75,17 @@ sprintly
 
 # Clone the project (Sprint.ly website)
 git clone https://github.com/sprintly/sprint.ly.git
+git clone https://github.com/sprintly/sprint.ly-services.git
 
 if [ ! -d "$PROJECT_DIR/sprint.ly" ]; then
 	echo "Failed to clone sprint.ly repo from 'https://github.com/sprintly/sprint.ly.git'"
 	exit 1
 fi
 
+# Add symlink to services package
+ln -s $PROJECT_DIR/sprint.ly-services/lookout $PROJECT_DIR/sprint.ly/snowbird/site-packages/lookout
+
+# Configure and build Sprint.ly
 cd "$PROJECT_DIR/sprint.ly"
 
 # Set the Github author and email
