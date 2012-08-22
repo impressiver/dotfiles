@@ -136,6 +136,13 @@ make all
 ./manage.py runserver 127.0.0.1:8000 &
 echo "Sprint.ly should now be available in your browser at: http://127.0.0.1:8000"
 
+# Propane for Campfire
+if [ ! -d /Applications/Propane.app ]; then
+	cd /tmp
+	curl -O http://propaneapp.com/appcast/Propane.zip
+	unzip /tmp/Propane.zip -d /Applications
+fi
+
 # TODO:
 # Add permissions for user to access created SQS queue (or change the code to set perms by default)
 # Configure ssh
