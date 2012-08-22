@@ -19,6 +19,7 @@ alias s="subl ."
 alias o="open"
 alias oo="open ."
 alias gz="tar -zcvf"
+alias rmpyc="find . -name \*.pyc -exec rm \{\} \+"
 
 # Detect which `ls` flavor is in use
 if ls --color > /dev/null 2>&1; then # GNU `ls`

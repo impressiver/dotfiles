@@ -92,7 +92,8 @@ cd "$PROJECT_DIR/sprint.ly"
 git config user.name "$gitauthor"
 git config user.email "$gitemail"
 
-# Create default overrides
+# Create default overrides file
+###############################################################################
 cat >> $PROJECT_DIR/sprint.ly/snowbird/overrides.m4 << EOF
 # Here are your generated override settings for the Sprint.ly website.
 # Please double check the values before continuing.
@@ -106,6 +107,7 @@ define(\`__DATABASE_HOST__', \`$dbhost')
 define(\`__DATABASE_PORT__', \`$dbport')
 define(\`__DATABASE_ENGINE__', \`mysql')
 EOF
+###############################################################################
 
 # Give a chance to modify the override values
 vim $PROJECT_DIR/sprint.ly/snowbird/overrides.m4
