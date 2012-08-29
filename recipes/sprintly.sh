@@ -1,5 +1,9 @@
 #!/bin/bash
 
+#
+# TODO: Ensure the following are installed: git, mysql, node, virtualenv, virtualenvwrapper
+#
+
 if [ -f $HOME/.extra ]; then
 	source $HOME/.extra
 fi
@@ -71,7 +75,7 @@ ssh-keygen -t rsa -f '$HOME/.ssh/id_rsa_sprintly' -C "$GIT_AUTHOR_EMAIL"
 echo "Installing Sprint.ly-Github CLI..."
 curl -O https://raw.github.com/nextbigsoundinc/Sprintly-GitHub/master/sprintly
 sudo python sprintly --install
-sudo chown $(whoami):admin /usr/local/sprintly
+sudo chown $(whoami):admin /usr/local/bin/sprintly
 rm sprintly
 mkdir -p $HOME/.sprintly
 echo "{\"user\": \"$gitemail\", \"key\": \"$apikey\"}" > $HOME/.sprintly/sprintly.config
@@ -114,7 +118,7 @@ EOF
 ###############################################################################
 
 # Give a chance to modify the override values
-vim $PROJECT_DIR/sprint.ly/snowbird/overrides.m4
+$EDITOR $PROJECT_DIR/sprint.ly/snowbird/overrides.m4
 # Now get rid of the comments so m4 won't pass them on
 sed -i '.backup' '/^#.*$/d' $PROJECT_DIR/sprint.ly/snowbird/overrides.m4
 rm $PROJECT_DIR/sprint.ly/snowbird/overrides.m4.backup
