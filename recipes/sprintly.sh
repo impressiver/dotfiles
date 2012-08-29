@@ -63,6 +63,10 @@ dbpass=${DATABASE_PASSWORD:-$DEFAULT_DATABASE_PASSWORD}
 dbhost=${DATABASE_HOST:-$DEFAULT_DATABASE_HOST}
 dbport=${DATABASE_PORT:-$DEFAULT_DATABASE_PORT}
 
+# Generate a Sprint.ly ssh keypair
+echo "Generating ssh keys for $GIT_AUTHOR_EMAIL ('~/.ssh/id_rsa_sprintly{.pub}')"
+ssh-keygen -t rsa -f '$HOME/.ssh/id_rsa_sprintly' -C "$GIT_AUTHOR_EMAIL"
+
 # Install the Sprint.ly-Github CLI (https://github.com/nextbigsoundinc/Sprintly-GitHub)
 echo "Installing Sprint.ly-Github CLI..."
 curl -O https://raw.github.com/nextbigsoundinc/Sprintly-GitHub/master/sprintly
