@@ -19,7 +19,10 @@ alias s="subl ."
 alias o="open"
 alias oo="open ."
 alias gz="tar -zcvf"
+
+# Cleanup
 alias rmpyc="find . -name \*.pyc -exec rm \{\} \+"
+alias rmds="find . -type f -name '*.DS_Store' -ls -delete"
 
 # Detect which `ls` flavor is in use
 if ls --color > /dev/null 2>&1; then # GNU `ls`
@@ -44,6 +47,9 @@ export LS_COLORS='no=00:fi=00:di=01;34:ln=01;36:pi=40;33:so=01;35:do=01;35:bd=40
 # Enable aliases to be sudo’ed
 alias sudo='sudo '
 
+# Gzip-enabled `curl`
+alias gurl="curl --compressed"
+
 # Get OS X Software Updates, and update Homebrew, npm, and their installed packages
 alias update='sudo softwareupdate -i -a; brew update; brew upgrade; npm update npm -g; npm update -g'
 
@@ -56,7 +62,7 @@ alias ips="ifconfig -a | grep -o 'inet6\? \(\([0-9]\+\.[0-9]\+\.[0-9]\+\.[0-9]\+
 alias whois="whois -h whois-servers.net"
 
 # Flush Directory Service cache
-alias flush="dscacheutil -flushcache"
+alias flush="dscacheutil -flushcache && killall -HUP mDNSResponder"
 
 # Clean up LaunchServices to remove duplicates in the “Open With” menu
 alias lscleanup="/System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister -kill -r -domain local -domain system -domain user && killall Finder"
@@ -76,15 +82,6 @@ alias c="tr -d '\n' | pbcopy"
 
 # Recursively delete `.DS_Store` files
 alias cleanup="find . -type f -name '*.DS_Store' -ls -delete"
-
-# File size
-if stat -c '' . > /dev/null 2>&1; then
-	# GNU `stat`
-	alias fs="stat -c \"%s bytes\""
-else
-	# OS X `stat`
-	alias fs="stat -f \"%z bytes\""
-fi
 
 # ROT13-encode text. Works for decoding, too! ;)
 alias rot13='tr a-zA-Z n-za-mN-ZA-M'
@@ -115,9 +112,6 @@ alias spoton="sudo mdutil -a -i on"
 
 # PlistBuddy alias, because sometimes `defaults` just doesn’t cut it
 alias plistbuddy="/usr/libexec/PlistBuddy"
-
-# Launch iOS Simulator
-alias ios="open -a /Applications/Xcode.app/Contents/Applications/iPhone\ Simulator.app"
 
 # Ring the terminal bell, and put a badge on Terminal.app’s Dock icon
 # (useful when executing time-consuming commands)

@@ -13,10 +13,14 @@ while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
 ###############################################################################
 
 # Set computer name (as done via System Preferences → Sharing)
-sudo scutil --set ComputerName "Animal Retina Pro"
-sudo scutil --set HostName "Animal Retina Pro"
-sudo scutil --set LocalHostName "Animal-Retina-Pro"
-sudo defaults write /Library/Preferences/SystemConfiguration/com.apple.smb.server NetBIOSName -string "Animal-Retina-Pro"
+DEFAULT_COMPUTER_NAME=$(scutil --get ComputerName)
+read -p "Name this computer: ($DEFAULT_COMPUTER_NAME) " COMPUTER_NAME
+computername=${COMPUTER_NAME:-$DEFAULT_COMPUTER_NAME}
+
+sudo scutil --set ComputerName "${computername}"
+sudo scutil --set HostName "${computername}"
+sudo scutil --set LocalHostName "${computername// /-}"
+sudo defaults write /Library/Preferences/SystemConfiguration/com.apple.smb.server NetBIOSName -string "${computername// /-}"
 
 # Menu bar: disable transparency
 defaults write NSGlobalDomain AppleEnableMenuBarTransparency -bool false
@@ -25,7 +29,7 @@ defaults write NSGlobalDomain AppleEnableMenuBarTransparency -bool false
 defaults write com.apple.menuextra.battery ShowPercent -string "NO"
 defaults write com.apple.menuextra.battery ShowTime -string "YES"
 
-# Menu bar: hide the useless Time Machine and Volume icons
+# Menu bar: hide the useless Time Machine and Volume icons (on pre-10.8)
 defaults write com.apple.systemuiserver menuExtras -array "/System/Library/CoreServices/Menu Extras/Bluetooth.menu" "/System/Library/CoreServices/Menu Extras/AirPort.menu" "/System/Library/CoreServices/Menu Extras/Battery.menu" "/System/Library/CoreServices/Menu Extras/Clock.menu"
 
 # Always show scrollbars
@@ -118,8 +122,8 @@ defaults write com.apple.BluetoothAudioAgent "Apple Bitpool Min (editable)" -int
 defaults write NSGlobalDomain AppleKeyboardUIMode -int 3
 
 # Enable access for assistive devices
-echo -n 'a' | sudo tee /private/var/db/.AccessibilityAPIEnabled > /dev/null 2>&1
-sudo chmod 444 /private/var/db/.AccessibilityAPIEnabled
+#echo -n 'a' | sudo tee /private/var/db/.AccessibilityAPIEnabled > /dev/null 2>&1
+#sudo chmod 444 /private/var/db/.AccessibilityAPIEnabled
 # TODO: avoid GUI password prompt somehow (http://apple.stackexchange.com/q/60476/4408)
 #sudo osascript -e 'tell application "System Events" to set UI elements enabled to true'
 
@@ -152,7 +156,7 @@ defaults write NSGlobalDomain AppleMetricUnits -bool false
 systemsetup -settimezone "America/Los_Angeles" > /dev/null
 
 # Disable auto-correct
-#defaults write NSGlobalDomain NSAutomaticSpellingCorrectionEnabled -bool false
+defaults write NSGlobalDomain NSAutomaticSpellingCorrectionEnabled -bool false
 
 ###############################################################################
 # Screen                                                                      #
@@ -248,9 +252,9 @@ defaults write com.apple.finder OpenWindowForNewRemovableDisk -bool true
 /usr/libexec/PlistBuddy -c "Set :FK_StandardViewSettings:IconViewSettings:iconSize 80" ~/Library/Preferences/com.apple.finder.plist
 /usr/libexec/PlistBuddy -c "Set :StandardViewSettings:IconViewSettings:iconSize 80" ~/Library/Preferences/com.apple.finder.plist
 
-# Use list view in all Finder windows by default
-# Four-letter codes for the other view modes: `icnv`, `clmv`, `Flwv`
-defaults write com.apple.Finder FXPreferredViewStyle -string "Nlsv"
+# Use column view in all Finder windows by default
+# Four-letter codes for the view modes: `Nlsv`, `icnv`, `clmv`, `Flwv`
+defaults write com.apple.Finder FXPreferredViewStyle -string "clmv"
 
 # Disable the warning before emptying the Trash
 defaults write com.apple.finder WarnOnEmptyTrash -bool false
@@ -314,6 +318,9 @@ defaults write com.apple.dock showhidden -bool true
 
 # Reset Launchpad
 find ~/Library/Application\ Support/Dock -name "*.db" -maxdepth 1 -delete
+
+# Add iPhone Simulator.app to Launchpad
+ln -s /Applications/Xcode.app/Contents/Applications/iPhone\ Simulator.app ~/Applications
 
 # Add a spacer to the left side of the Dock (where the applications are)
 #defaults write com.apple.dock persistent-apps -array-add '{tile-data={}; tile-type="spacer-tile";}'
@@ -464,18 +471,18 @@ defaults write com.apple.DiskUtility advanced-image-options -bool true
 ###############################################################################
 
 # Start SizeUp at login
-defaults write com.irradiatedsoftware.SizeUp StartAtLogin -bool true
+#defaults write com.irradiatedsoftware.SizeUp StartAtLogin -bool true
 
 # Don’t show the preferences window on next start
-defaults write com.irradiatedsoftware.SizeUp ShowPrefsOnNextStart -bool false
+#defaults write com.irradiatedsoftware.SizeUp ShowPrefsOnNextStart -bool false
 
 ###############################################################################
 # Transmission.app                                                            #
 ###############################################################################
 
-# Use `~/Documents/Torrents` to store incomplete downloads
+# Use `~/Downloads/Torrents` to store incomplete downloads
 defaults write org.m0k.transmission UseIncompleteDownloadFolder -bool true
-defaults write org.m0k.transmission IncompleteDownloadFolder -string "${HOME}/Documents/Torrents"
+defaults write org.m0k.transmission IncompleteDownloadFolder -string "${HOME}/Downloads/Torrents"
 
 # Don’t prompt for confirmation before downloading
 defaults write org.m0k.transmission DownloadAsk -bool false

@@ -7,6 +7,7 @@ TEXTMATE_VERSION='1.5.11_r1635'
 DROPBOX_VERSION='1.4.12'
 ONEPASSWORD_VERSION='3.8.20'
 ADIUM_VERSION='1.5.2'
+TRANSMISSION_VERSION='2.61'
 
 INSTALLED_FORMULAE=$(brew list)
 # Functions return exit codes; 0 means OK.
@@ -169,6 +170,7 @@ echo
 # Adobe Flash Player (and browser plugins)
 echo "Installing Adobe Flash Player"
 hdiutil attach http://fpdownload.macromedia.com/get/flashplayer/pdc/$FLASH_PLAYER_VERSION/install_flash_player_osx.dmg
+echo
 echo "[Adobe Flash Player] Please follow the prompts. Waiting for Adobe Flash Player installer to quit..."
 open -W /Volumes/Flash\ Player/Install\ Adobe\ Flash\ Player.app
 hdiutil detach /Volumes/Flash\ Player
@@ -205,7 +207,6 @@ if [ ! -d /Applications/Dropbox.app ]; then
 	hdiutil attach /tmp/Dropbox%20$DROPBOX_VERSION.dmg
 	echo
 	echo "[Dropbox] Please follow the prompts. Waiting for Dropbox installer to quit..."
-	echo
 	open -W /Volumes/Dropbox\ Installer/Dropbox.app
 	hdiutil detach /Volumes/Dropbox\ Installer
 else
@@ -232,3 +233,11 @@ else
 	echo "Adium is already installed"
 fi
 
+# Transmission
+if [ ! -d /Applications/Transmission.app ]; then
+	echo "Installing Transmission"
+	hdiutil attach http://download.transmissionbt.com/files/Transmission-$TRANSMISSION_VERSION.dmg
+	cp -R /Volumes/Transmission/Transmission.app /Applications/
+else
+	echo "Transmission is already installed"
+fi
