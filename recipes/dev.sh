@@ -52,6 +52,11 @@ else
 
 	installed_packages=$(pip freeze)
 
+	# Not currently working w/ pip
+	# if [[ ! "$installed_packages" == *pyobjc* ]]; then
+	# 	echo "Installing PyObjC"
+	# 	pip install pyobjc-core pyobjc
+
 	if [[ ! "$installed_packages" == *virtualenv* ]]; then
 		echo "Installing virtualenv"
 		pip install virtualenv

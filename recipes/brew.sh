@@ -68,6 +68,10 @@ if install 'python' 'Python'; then
 		else
 			sed -i '.backup' "s#^export PATH=\(.*\)\$#export PATH=$(brew --prefix)\/bin:$(brew --prefix)\/share\/python:\1#" $HOME/.path
 		fi
+
+		# Add OS X default PyObjC libraries to the path
+		if ! grep -q -e "/System/Library/Frameworks/Python.framework/Versions/Current/Extras/lib/python/PyObjC" $HOME/.path; then
+			sed -i '.backup' "s#^export PATH=\(.*\)\$#export PATH=\1:/System/Library/Frameworks/Python.framework/Versions/Current/Extras/lib/python/PyObjC#" $HOME/.path
 	else
 		echo "export PATH=$(brew --prefix)/bin:$(brew --prefix)/share/python:\$PATH" > $HOME/.path
 	fi

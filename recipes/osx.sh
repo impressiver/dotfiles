@@ -18,7 +18,7 @@ read -p "Name this computer: ($DEFAULT_COMPUTER_NAME) " COMPUTER_NAME
 computername=${COMPUTER_NAME:-$DEFAULT_COMPUTER_NAME}
 
 sudo scutil --set ComputerName "${computername}"
-sudo scutil --set HostName "${computername}"
+sudo scutil --set HostName "${computername// /-}"
 sudo scutil --set LocalHostName "${computername// /-}"
 sudo defaults write /Library/Preferences/SystemConfiguration/com.apple.smb.server NetBIOSName -string "${computername// /-}"
 
