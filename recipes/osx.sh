@@ -91,6 +91,9 @@ systemsetup -setrestartfreeze on
 # Never go into computer sleep mode
 systemsetup -setcomputersleep Off > /dev/null
 
+# Check for software updates daily, not just once per week
+defaults write com.apple.SoftwareUpdate ScheduleFrequency -int 1
+
 ###############################################################################
 # Trackpad, mouse, keyboard, Bluetooth accessories, and input                 #
 ###############################################################################
@@ -319,8 +322,8 @@ defaults write com.apple.dock showhidden -bool true
 # Reset Launchpad
 find ~/Library/Application\ Support/Dock -name "*.db" -maxdepth 1 -delete
 
-# Add iPhone Simulator.app to Launchpad
-ln -s /Applications/Xcode.app/Contents/Applications/iPhone\ Simulator.app ~/Applications
+# Add iOS Simulator to Launchpad
+ln -s /Applications/Xcode.app/Contents/Applications/iPhone\ Simulator.app /Applications/iOS\ Simulator.app
 
 # Add a spacer to the left side of the Dock (where the applications are)
 #defaults write com.apple.dock persistent-apps -array-add '{tile-data={}; tile-type="spacer-tile";}'
@@ -373,6 +376,9 @@ defaults write com.apple.Safari com.apple.Safari.ContentPageGroupIdentifier.WebK
 
 # Add a context menu item for showing the Web Inspector in web views
 defaults write NSGlobalDomain WebKitDeveloperExtras -bool true
+
+# Enable the WebKit Developer Tools in the Mac App Store
+defaults write com.apple.appstore WebKitDeveloperExtras -bool true
 
 ###############################################################################
 # iTunes                                                                      #
@@ -524,8 +530,9 @@ defaults write com.twitter.twitter-mac HideInBackground -bool true
 # Kill affected applications                                                  #
 ###############################################################################
 
-for app in "Address Book" "Calendar" "Contacts" "Dock" "Finder" "Mail" \
-	"Safari" "iCal" "SystemUIServer" "iTunes" "SystemUIServer" "Twitter"; do
+for app in "Address Book" "Calendar" "Contacts" "Dashboard" "Dock" "Finder"
+    "Mail" "Safari" "iCal" "SystemUIServer" "iTunes" "SystemUIServer" "Twitter"
+do
 	killall "$app" > /dev/null 2>&1
 done
 sleep 5 # Wait a bit and refocus the terminal window
