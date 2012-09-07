@@ -530,7 +530,7 @@ defaults write com.twitter.twitter-mac HideInBackground -bool true
 # Kill affected applications                                                  #
 ###############################################################################
 
-for app in "Address Book" "Calendar" "Contacts" "Dashboard" "Dock" "Finder"
+for app in "Address Book" "Calendar" "Contacts" "Dashboard" "Dock" "Finder" \
     "Mail" "Safari" "iCal" "SystemUIServer" "iTunes" "SystemUIServer" "Twitter"
 do
 	killall "$app" > /dev/null 2>&1
