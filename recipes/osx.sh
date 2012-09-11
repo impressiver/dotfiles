@@ -2,6 +2,9 @@
 
 # ~/.osx — http://mths.be/osx
 
+cd "$(dirname "$0")"
+SCRIPT_DIR="$(pwd -P)"
+
 # Ask for the administrator password upfront
 sudo -v
 
@@ -427,7 +430,7 @@ defaults write com.apple.mail NSUserKeyEquivalents -dict-add "Send" "@\\U21a9"
 defaults write com.apple.terminal StringEncodings -array 4
 
 # Use a modified version of the Pro theme by default in Terminal.app
-open "$HOME/init/Kappa.terminal"
+open "$SCRIPT_DIR/init/Kappa.terminal"
 sleep 1 # Wait a bit to make sure the theme is loaded
 osascript -e 'tell application "Terminal" to close window 1'
 
@@ -535,7 +538,7 @@ for app in "Address Book" "Calendar" "Contacts" "Dashboard" "Dock" "Finder" \
 do
 	killall "$app" > /dev/null 2>&1
 done
-sleep 5 # Wait a bit and refocus the terminal window
+sleep 1 # Wait a bit and refocus the terminal window
 osascript -e 'tell application "Terminal" to activate'
 
 echo "Done. Note that some of these changes require a logout/restart to take effect."

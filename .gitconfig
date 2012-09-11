@@ -36,6 +36,10 @@
 	attributesfile = ~/.gitattributes
 	# Treat spaces before tabs, lines that are indented with 8 or more spaces, and all kinds of trailing whitespace as an error
 	whitespace = space-before-tab,indent-with-non-tab,trailing-space
+	# Let Git handle line endings automatically
+	autocrlf = input
+	# Use Sublime Text 2 as the default editor
+	editor = 'subl -n -w'
 
 [color]
 	# Use colors in Git commands that are capable of colored output when outputting to the terminal
@@ -54,8 +58,8 @@
 	changed = green
 	untracked = cyan
 [merge]
-	# Include summaries of merged commits in newly created merge commit messages
-	log = true
+	# Exclude summaries of merged commits in newly created merge commit messages
+	log = false
 
 # Use `origin` as the default remote on the `master` branch in all cases
 [branch "master"]

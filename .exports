@@ -1,6 +1,11 @@
 # Make vim the default editor
 export EDITOR="vim"
 
+# Make Sublime Text 2 the default editor (if it's available)
+if [ ! -e /usr/local/bin/subl ]; then
+  export EDITOR="subl"
+fi
+
 # Don’t clear the screen after quitting a manual page
 export MANPAGER="less -X"
 

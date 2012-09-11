@@ -63,6 +63,7 @@ install 'wget' 'wget' '--enable-iri'
 # Install Python
 if install 'python' 'Python'; then
 	if [ -f "$HOME/.path" ]; then
+		# TODO: Need to check for case where nginx installation added '/usr/local/sbin'
 		if grep -q -e "$(brew --prefix)/bin:$(brew --prefix)/share/python" $HOME/.path; then
 			echo "'~/.path' already contains '$(brew --prefix)/bin:$(brew --prefix)/share/python'"
 		else

@@ -41,6 +41,31 @@ mkdir -p $HOME/Library/LaunchAgents
 # "Hub" for Github (http://defunkt.io/hub/)
 install 'hub' 'Hub'
 
+# Nginx
+if install 'nginx'; then
+	if ! grep -q -e "$(brew --prefix)/sbin" $HOME/.path; then
+		if grep -q -e "$(brew --prefix)/bin" $HOME/.path; then
+			sed -i '.backup' "s#$(brew --prefix)/bin#$(brew --prefix)/bin:$(brew --prefix)/sbin#" $HOME/.path
+		else
+			sed -i '.backup' "s#^export PATH=\(.*\)\$#export PATH=$(brew --prefix)/sbin:\1#" $HOME/.path
+		fi
+	fi
+	# TODO: Prompt to see if Nginx should be set up to run on port 80
+	mkdir -p $HOME/Library/LaunchAgents
+	cp "$(brew --prefix nginx)/homebrew.mxcl.nginx.plist" "$HOME/Library/LaunchAgents/"
+	launchctl load -w $HOME/Library/LaunchAgents/homebrew.mxcl.nginx.plist
+
+	# Port 80
+	# mkdir -p /Library/LaunchAgents
+	# cp "$(brew --prefix nginx)/homebrew.mxcl.nginx.plist" "/Library/LaunchAgents/"
+	# # Remove user in .plist
+	# sudo launchctl load -w $HOME/Library/LaunchAgents/homebrew.mxcl.nginx.plist
+	# # Modify nginx.conf to set user to current user
+	# # Add support for 'active sites' confs
+	# mkdir -p /usr/local/etc/nginx/conf.d
+fi
+
+
 # Python: Install pip, virtualenv, and virtualenvwrapper
 if [ ! -e /usr/local/bin/python ]; then
 	echo "Skipping virtualenv setup. Python was not installed by Homebrew."
