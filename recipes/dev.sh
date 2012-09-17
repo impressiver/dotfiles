@@ -59,7 +59,7 @@ if install 'nginx'; then
 	# mkdir -p /Library/LaunchAgents
 	# cp "$(brew --prefix nginx)/homebrew.mxcl.nginx.plist" "/Library/LaunchAgents/"
 	# # Remove user in .plist
-	# sudo launchctl load -w $HOME/Library/LaunchAgents/homebrew.mxcl.nginx.plist
+	# sudo launchctl load -w /Library/LaunchAgents/homebrew.mxcl.nginx.plist
 	# # Modify nginx.conf to set user to current user
 	# # Add support for 'active sites' confs
 	# mkdir -p /usr/local/etc/nginx/conf.d
