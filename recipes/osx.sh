@@ -413,8 +413,8 @@ defaults write com.apple.iTunes NSUserKeyEquivalents -dict-add "Target Search Fi
 ###############################################################################
 
 # Disable send and reply animations in Mail.app
-defaults write com.apple.Mail DisableReplyAnimations -bool true
-defaults write com.apple.Mail DisableSendAnimations -bool true
+defaults write com.apple.mail DisableReplyAnimations -bool true
+defaults write com.apple.mail DisableSendAnimations -bool true
 
 # Copy email addresses as `foo@example.com` instead of `Foo Bar <foo@example.com>` in Mail.app
 defaults write com.apple.mail AddressesIncludeNameOnPasteboard -bool false
@@ -474,6 +474,14 @@ defaults write com.apple.TextEdit PlainTextEncodingForWrite -int 4
 # Enable the debug menu in Disk Utility
 defaults write com.apple.DiskUtility DUDebugMenuEnabled -bool true
 defaults write com.apple.DiskUtility advanced-image-options -bool true
+
+###############################################################################
+# Google Chrome & Google Chrome Canary                                        #
+###############################################################################
+
+# Allow installing user scripts via GitHub or Userscripts.org
+defaults write com.google.Chrome ExtensionInstallSources -array "https://*.github.com/*" "http://userscripts.org/*"
+defaults write com.google.Chrome.canary ExtensionInstallSources -array "https://*.github.com/*" "http://userscripts.org/*"
 
 ###############################################################################
 # SizeUp.app                                                                  #
