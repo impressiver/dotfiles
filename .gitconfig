@@ -39,7 +39,7 @@
 	# Let Git handle line endings automatically
 	autocrlf = input
 	# Use Sublime Text 2 as the default editor
-	editor = 'subl -n -w'
+	editor = subl -n -w
 
 [push]
 	default = current

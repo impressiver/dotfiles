@@ -70,6 +70,10 @@ dbport=${DATABASE_PORT:-$DEFAULT_DATABASE_PORT}
 # Generate a Sprint.ly ssh keypair
 echo "Generating ssh keys for $GIT_AUTHOR_EMAIL ('~/.ssh/id_rsa_sprintly{.pub}')"
 ssh-keygen -t rsa -f '$HOME/.ssh/id_rsa_sprintly' -C "$GIT_AUTHOR_EMAIL"
+# TODO: Add HostName *.sprint.ly to ~/.ssh/config
+
+# Install Sphinx
+# TODO: brew install sphinx
 
 # Install the Sprint.ly-Github CLI (https://github.com/nextbigsoundinc/Sprintly-GitHub)
 echo "Installing Sprint.ly-Github CLI..."
