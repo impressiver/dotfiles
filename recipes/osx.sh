@@ -325,8 +325,10 @@ defaults write com.apple.dock showhidden -bool true
 # Reset Launchpad
 find ~/Library/Application\ Support/Dock -name "*.db" -maxdepth 1 -delete
 
-# Add iOS Simulator to Launchpad
-ln -s /Applications/Xcode.app/Contents/Applications/iPhone\ Simulator.app /Applications/iOS\ Simulator.app
+# Add iOS Simulator to Applications
+if [ ! -e /Applications/iOS\ Simulator.app ]; then
+  ln -s /Applications/Xcode.app/Contents/Applications/iPhone\ Simulator.app /Applications/iOS\ Simulator.app
+fi
 
 # Add a spacer to the left side of the Dock (where the applications are)
 #defaults write com.apple.dock persistent-apps -array-add '{tile-data={}; tile-type="spacer-tile";}'
@@ -430,7 +432,7 @@ defaults write com.apple.mail NSUserKeyEquivalents -dict-add "Send" "@\\U21a9"
 defaults write com.apple.terminal StringEncodings -array 4
 
 # Use a modified version of the Pro theme by default in Terminal.app
-open "$SCRIPT_DIR/init/Kappa.terminal"
+open "$SCRIPT_DIR/resources/Kappa.terminal"
 sleep 1 # Wait a bit to make sure the theme is loaded
 osascript -e 'tell application "Terminal" to close window 1'
 
