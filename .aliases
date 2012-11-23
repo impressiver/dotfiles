@@ -6,14 +6,19 @@ alias .....="cd ../../../.."
 alias ~="cd ~" # `cd` is probably faster to type though
 alias -- -="cd -"
 
+# Store directory-contextual bash history
+alias cd="hcd"
+if [ ! -z "$WD" ]; then
+  alias cdg="cd $WD"
+fi
+
 # Shortcuts
-alias d="cd ~/Documents/Dropbox"
+alias d="cd $DROPBOX_DIR"
 alias dl="cd ~/Downloads"
 alias dt="cd ~/Desktop"
-alias p="cd ~/Projects"
+alias p="cd $PROJECTS_DIR"
 alias f="find . -name"
 alias g="git"
-alias gr="cd $(git rev-parse --show-cdup)"  # cd to root of git repo
 alias h="history"
 alias j="jobs"
 alias v="vim"
@@ -42,6 +47,9 @@ alias la="ls -la ${colorflag}"
 
 # List only directories
 alias lsd='ls -l ${colorflag} | grep "^d"'
+
+# Directory tree with item count/file size
+alias lst="tree -AlCNh --dirsfirst"
 
 # Always use color output for `ls`
 alias ls="command ls ${colorflag}"

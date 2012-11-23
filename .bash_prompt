@@ -4,7 +4,7 @@
 
 if [[ $COLORTERM = gnome-* && $TERM = xterm ]] && infocmp gnome-256color >/dev/null 2>&1; then
 	export TERM=gnome-256color
-elif infocmp xterm-256color >/dev/null 2>&1; then
+elif [[ $TERM != dumb ]] && infocmp xterm-256color >/dev/null 2>&1; then
 	export TERM=xterm-256color
 fi
 
@@ -54,3 +54,6 @@ function parse_git_branch() {
 
 export PS1="\[${BOLD}${MAGENTA}\]\u \[$WHITE\]at \[$ORANGE\]\h \[$WHITE\]in \[$GREEN\]\w\[$WHITE\]\$([[ -n \$(git branch 2> /dev/null) ]] && echo \" on \")\[$PURPLE\]\$(parse_git_branch)\[$WHITE\]\n\$ \[$RESET\]"
 export PS2="\[$ORANGE\]→ \[$RESET\]"
+
+# Share history between bash sessions
+export PROMPT_COMMAND="history -a; history -n; $PROMPT_COMMAND"

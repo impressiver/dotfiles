@@ -23,3 +23,7 @@ export HISTIGNORE="ls:cd:cd -:pwd:exit:date:* --help"
 # Show color output for grep
 export GREP_COLORS='ms=01;34:mc=01;34:sl=:cx=:fn=35:ln=32:bn=32:se=36'
 export GREP_OPTIONS='--color=auto'
+
+# Common directories
+export PROJECTS_DIR="$HOME/Projects"
+export DROPBOX_DIR="$HOME/Dropbox"

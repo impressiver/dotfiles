@@ -4,7 +4,7 @@
 # Load the shell dotfiles, and then some:
 # * ~/.path can be used to extend `$PATH`.
 # * ~/.extra can be used for settings you don’t want to commit.
-for file in ~/.{path,bash_prompt,exports,aliases,functions,extra,profile}; do
+for file in ~/.{path,bash_prompt,exports,functions,aliases,extra,profile}; do
 	[ -r "$file" ] && source "$file"
 done
 unset file
@@ -14,6 +14,14 @@ shopt -s nocaseglob
 
 # Append to the Bash history file, rather than overwriting it
 shopt -s histappend
+
+histfile="$HOME/.dir_bash_history$PWD/${USER}_bash_history"
+if [ -d "$histfile" ]; then
+  export HISTFILE="$histfile"
+else
+  export HISTFILE="$HOME/.bash_history"
+fi
+unset histfile
 
 # Autocorrect typos in path names when using `cd`
 shopt -s cdspell
