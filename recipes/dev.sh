@@ -41,6 +41,10 @@ mkdir -p $HOME/Library/LaunchAgents
 
 # "Hub" for Github (http://defunkt.io/hub/)
 install 'hub' 'Hub'
+if ! grep -q -e "^alias git=" $HOME/.extra; then
+  echo -e "\n# Replace git with hub (which does everything git does and more)" >> $HOME/.extra
+  echo "alias git=hub" >> $HOME/.extra
+fi
 
 # Nginx
 if install 'nginx'; then

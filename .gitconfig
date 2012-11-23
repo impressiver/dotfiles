@@ -1,12 +1,16 @@
 [alias]
 	# View the SHA, description, and history graph of the latest 20 commits
 	l = log --pretty=oneline -n 20 --graph
+	# View the last commit
+	last = log -1 HEAD
 	# View the current working tree status using the short format
 	s = status -s
 	# Show the diff between the latest commit and the current state
 	d = !"git diff-index --quiet HEAD -- || clear; git diff --patch-with-stat"
 	# `git di $number` shows the diff between the state `$number` revisions ago and the current state
 	di = !"d() { git diff --patch-with-stat HEAD~$1; }; git diff-index --quiet HEAD -- || clear; d"
+	# Highlight word changes instead of full lines
+	wd = diff --word-diff
 	# Pull in remote changes for the current repository and all its submodules
 	p = !"git pull; git submodule foreach git pull origin master"
 	# Clone a repository including all submodules
@@ -25,10 +29,12 @@
 	reb = "!r() { git rebase -i HEAD~$1; }; r"
 	# Undo a `git push`
 	undopush = push -f origin HEAD^:master
-
-[apply]
-	# Detect whitespace errors when applying a patch
-	whitespace = fix
+	# Unstage files for commit
+	unadd = "!f() { files=\"$@\"; [ -z $files ] && files='.'; git reset HEAD -- $files; }; f"
+	# Accept the local changes to resolve conflicts
+	accept-ours = "!f() { files=\"$@\"; [ -z $files ] && files='.'; git checkout --ours -- $files; git add -u $files; }; f"
+	# Accept the incoming changes to resolve conflicts
+	accept-theirs = "!f() { files=\"$@\"; [ -z $files ] && files='.'; git checkout --theirs -- $files; git add -u $files; }; f"
 
 [core]
 	# Use custom `.gitignore` and `.gitattributes`
@@ -41,33 +47,56 @@
 	# Use Sublime Text 2 as the default editor
 	editor = subl -n -w
 
-[push]
-	default = current
+[advice]
+	pushNonFastForward = false
+	statusHints = false
 
 [color]
 	# Use colors in Git commands that are capable of colored output when outputting to the terminal
 	ui = auto
+
 [color "branch"]
 	current = yellow reverse
 	local = yellow
 	remote = green
+
 [color "diff"]
 	meta = yellow bold
 	frag = magenta bold
 	old = red bold
 	new = green bold
+
 [color "status"]
 	added = yellow
 	changed = green
 	untracked = cyan
+
+[diff]
+	renames = copies
+	mnemonicprefix = true
+
+[apply]
+	# Detect whitespace errors when applying a patch
+	whitespace = fix
+
+[rerere]
+	enabled = true
+
 [merge]
 	# Exclude summaries of merged commits in newly created merge commit messages
 	log = false
+	stat = true
+
+[branch]
+	autosetupmerge = true
 
 # Use `origin` as the default remote on the `master` branch in all cases
 [branch "master"]
 	remote = origin
 	merge = refs/heads/master
+
+[push]
+	default = current
 
 # URL shorthands
 [url "git@github.com:"]
@@ -82,6 +111,3 @@
 	pushInsteadOf = "git://gist.github.com/"
 [url "git://gist.github.com/"]
 	insteadOf = "gist:"
-
-[push]
-	default = simple
