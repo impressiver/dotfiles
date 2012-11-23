@@ -85,6 +85,9 @@ mkdir -p $HOME/.sprintly
 echo "{\"user\": \"$gitemail\", \"key\": \"$apikey\"}" > $HOME/.sprintly/sprintly.config
 sprintly
 
+echo "Adding alias 'run.ly' to '~/.extra'..."
+#alias run.ly="cd.ly; workon snowbird; make settings.py; ./manage.py syncdb; ./manage.py migrate; ./manage.py runserver"
+
 # Clone the project (Sprint.ly website)
 git clone https://github.com/sprintly/sprint.ly.git
 git clone https://github.com/sprintly/sprint.ly-services.git
@@ -127,7 +130,7 @@ $EDITOR $PROJECT_DIR/sprint.ly/snowbird/overrides.m4
 sed -i '.backup' '/^#.*$/d' $PROJECT_DIR/sprint.ly/snowbird/overrides.m4
 rm $PROJECT_DIR/sprint.ly/snowbird/overrides.m4.backup
 
-echo "Setting up virtual environment ('snowbird')..."
+echo "Setting up virtual environment 'snowbird'..."
 source /usr/local/share/python/virtualenvwrapper.sh
 mkvirtualenv snowbird
 workon snowbird

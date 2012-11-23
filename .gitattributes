@@ -1,2 +1,3 @@
-# Automatically normalize line endings for all text-based files
+# Automatically normalize line endings for all text-based files except ssh keys
 * text=auto
+*.pem -crlf -text
