@@ -35,6 +35,8 @@
 	accept-ours = "!f() { files=\"$@\"; [ -z $files ] && files='.'; git checkout --ours -- $files; git add -u $files; }; f"
 	# Accept the incoming changes to resolve conflicts
 	accept-theirs = "!f() { files=\"$@\"; [ -z $files ] && files='.'; git checkout --theirs -- $files; git add -u $files; }; f"
+	# CD to the root of the project
+	cd-top = !"cd $(git rev-parse --show-toplevel)"
 
 [core]
 	# Use custom `.gitignore` and `.gitattributes`
