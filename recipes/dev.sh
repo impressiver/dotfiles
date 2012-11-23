@@ -39,6 +39,9 @@ function install(){
 # We're going to need this later
 mkdir -p $HOME/Library/LaunchAgents
 
+# CLI Git repository browser
+install 'tig' 'Tig'
+
 # "Hub" for Github (http://defunkt.io/hub/)
 install 'hub' 'Hub'
 if ! grep -q -e "^alias git=" $HOME/.extra; then

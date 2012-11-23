@@ -3,7 +3,7 @@ function mkd() {
 	mkdir -p "$@" && cd "$@"
 }
 
-# Go to a project directory
+# Go to a project directory, allowing tab-completion of subdirectories
 function cdp() {
 	cd ~/Projects/$1
 }
