@@ -1,29 +1,67 @@
 #  Replacement for builtin 'cd', which keeps a separate bash-history for every
-#  directory.
+#  project directory.
 #  Source: Aaron Harnly https://github.com/aaronharnly/dotfiles-public/blob/master/.bash-functions.sh#L263
 function hcd()
 {
-  history -w # write current history file
   builtin cd "$@"  # do actual cd
-  local HISTDIR="$HOME/.bash_history.d$PWD" # use nested folders for history
-  if [ ! -d "$HISTDIR" ]; then # create folder if needed
-    mkdir -p "$HISTDIR"
-  fi
-  export HISTFILE="$HISTDIR/${USER}_bash_history" # set new history file
-  history -c # clear memory
-  history -r # read from current histfile
 
-  # if we're entering a project directory, check for a virtualenv
+  # if we're entering a project directory, load the bash history and check for
+  # a Python virtual environment
   this_dir=$(basename "$PWD")
   parent_dir=$(dirname "$PWD")
 
   if [[ "$parent_dir" == "$PROJECTS_DIR"* ]]; then
-    if [ -d "$HOME/.virtualenvs/${this_dir}" ]; then
-        echo "Activating virtualenv: $this_dir..."
-        workon "${this_dir}"
-        # source "$HOME/virtualenvs/${this_dir}/bin/activate"
+    if [ "$parent_dir" == "$PROJECTS_DIR" ]; then
+      project_name=${this_dir}
+    else
+      project_name=${parent_dir#"$PROJECTS_DIR/"}
+      project_name=${project_name%%/*}
     fi
+
+    if [ "$PROJECT" != "${project_name}" ]; then
+      echo "Loading ${project_name}"
+
+      project_dir="${PROJECTS_DIR}/${project_name}"
+
+      # Load project bash history
+      history -w # write current history file
+      local HISTDIR="$HOME/.bash_history.d${project_dir}"
+      if [ ! -d "$HISTDIR" ]; then # create folder if needed
+        mkdir -p "$HISTDIR"
+      fi
+      export HISTFILE="$HISTDIR/bash_history" # set new history file
+      history -c # clear memory
+      history -r # read from current histfile
+
+      # Set the active project name
+      export PROJECT="$project_name"
+    fi
+
+    # Load virtualenv
     # TODO: (IW) Add check for a .virtualenv file in $this_dir
+    if [ "$VIRTUAL_ENV" != "$this_dir" ]; then
+      if [ -d "$HOME/.virtualenvs/${this_dir}" ]; then
+        echo "Activating virtualenv: $this_dir"
+        workon "$this_dir"
+        # source "$HOME/virtualenvs/${this_dir}/bin/activate"
+      fi
+    fi
+  elif [ ! -z "$PROJECT" ]; then
+    echo "Leaving $PROJECT"
+
+    if [ "$HISTFILE" != "$HOME/.bash_history" ]; then
+      history -w # write current history file
+      export HISTFILE="$HOME/.bash_history"
+      history -c # clear memory
+      history -r # read from current histfile
+    fi
+
+    if [ ! -z "$VIRTUAL_ENV" ]; then
+      deactivate
+    fi
+
+    # Clear the active project name
+    unset PROJECT
   fi
 }
 

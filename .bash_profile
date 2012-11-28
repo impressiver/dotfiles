@@ -15,14 +15,6 @@ shopt -s nocaseglob
 # Append to the Bash history file, rather than overwriting it
 shopt -s histappend
 
-histfile="$HOME/.dir_bash_history$PWD/${USER}_bash_history"
-if [ -d "$histfile" ]; then
-  export HISTFILE="$histfile"
-else
-  export HISTFILE="$HOME/.bash_history"
-fi
-unset histfile
-
 # Autocorrect typos in path names when using `cd`
 shopt -s cdspell
 
@@ -49,3 +41,6 @@ complete -o "nospace" -W "Contacts Calendar Dock Finder Mail Safari iTunes Syste
 
 # If possible, add tab completion for many more commands
 [ -f /etc/bash_completion ] && source /etc/bash_completion
+
+# Finally, perform directory check to load project context
+hcd .

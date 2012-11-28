@@ -56,4 +56,4 @@ export PS1="\[${BOLD}${MAGENTA}\]\u \[$WHITE\]at \[$ORANGE\]\h \[$WHITE\]in \[$G
 export PS2="\[$ORANGE\]→ \[$RESET\]"
 
 # Share history between bash sessions
-export PROMPT_COMMAND="history -a; history -n; $PROMPT_COMMAND"
+# export PROMPT_COMMAND="history -a; history -n; $PROMPT_COMMAND"
