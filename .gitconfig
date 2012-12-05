@@ -37,6 +37,8 @@
 	accept-theirs = "!f() { files=\"$@\"; [ -z $files ] && files='.'; git checkout --theirs -- $files; git add -u $files; }; f"
 	# CD to the root of the project
 	cd-top = !"cd $(git rev-parse --show-toplevel)"
+	# Show changed files that have not been pushed
+	outgoing = git log origin/master..HEAD
 
 [core]
 	# Use custom `.gitignore` and `.gitattributes`
