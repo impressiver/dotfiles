@@ -127,7 +127,7 @@
 	<data>
 	YnBsaXN0MDDUAQIDBAUGFRZYJHZlcnNpb25YJG9iamVjdHNZJGFyY2hpdmVyVCR0b3AS
 	AAGGoKMHCA9VJG51bGzTCQoLDA0OVU5TUkdCXE5TQ29sb3JTcGFjZVYkY2xhc3NPECcw
-	Ljk0OTAxOTYxMDkgMC45NDkwMTk2MTA5IDAuOTQ5MDE5NjEwOQAQAYAC0hAREhNaJGNs
+	Ljg5OTYwNTEyOTEgMC44OTk2MDUxMjkxIDAuODk5NjA1MTI5MQAQAYAC0hAREhNaJGNs
 	YXNzbmFtZVgkY2xhc3Nlc1dOU0NvbG9yohIUWE5TT2JqZWN0XxAPTlNLZXllZEFyY2hp
 	dmVy0RcYVHJvb3SAAQgRGiMtMjc7QUhOW2KMjpCVoKmxtL3P0tcAAAAAAAABAQAAAAAA
 	AAAZAAAAAAAAAAAAAAAAAAAA2Q==
@@ -154,7 +154,7 @@
 	<key>Bell</key>
 	<false/>
 	<key>BlinkText</key>
-	<false/>
+	<true/>
 	<key>CursorBlink</key>
 	<false/>
 	<key>CursorColor</key>
@@ -169,10 +169,10 @@
 	<data>
 	YnBsaXN0MDDUAQIDBAUGGBlYJHZlcnNpb25YJG9iamVjdHNZJGFyY2hpdmVyVCR0b3AS
 	AAGGoKQHCBESVSRudWxs1AkKCwwNDg8QVk5TU2l6ZVhOU2ZGbGFnc1ZOU05hbWVWJGNs
-	YXNzI0AoAAAAAAAAEBCAAoADWk9zYWthLU1vbm/SExQVFlokY2xhc3NuYW1lWCRjbGFz
-	c2VzVk5TRm9udKIVF1hOU09iamVjdF8QD05TS2V5ZWRBcmNoaXZlctEaG1Ryb290gAEI
-	ERojLTI3PEJLUltiaXJ0dniDiJOco6avwcTJAAAAAAAAAQEAAAAAAAAAHAAAAAAAAAAA
-	AAAAAAAAAMs=
+	YXNzI0AkAAAAAAAAEBCAAoADXxAbQml0c3RyZWFtVmVyYVNhbnNNb25vLVJvbWFu0hMU
+	FRZaJGNsYXNzbmFtZVgkY2xhc3Nlc1ZOU0ZvbnSiFRdYTlNPYmplY3RfEA9OU0tleWVk
+	QXJjaGl2ZXLRGhtUcm9vdIABCBEaIy0yNzxCS1JbYmlydHZ4lpumr7a5wtTX3AAAAAAA
+	AAEBAAAAAAAAABwAAAAAAAAAAAAAAAAAAADe
 	</data>
 	<key>FontAntialias</key>
 	<true/>
@@ -180,6 +180,8 @@
 	<real>1.1000000000000001</real>
 	<key>FontWidthSpacing</key>
 	<integer>1</integer>
+	<key>Linewrap</key>
+	<true/>
 	<key>ProfileCurrentVersion</key>
 	<real>2.02</real>
 	<key>SelectionColor</key>
@@ -226,8 +228,12 @@
 	<true/>
 	<key>WindowTitle</key>
 	<string></string>
+	<key>columnCount</key>
+	<integer>212</integer>
 	<key>name</key>
 	<string>Kappa</string>
+	<key>rowCount</key>
+	<integer>42</integer>
 	<key>shellExitAction</key>
 	<integer>2</integer>
 	<key>type</key>

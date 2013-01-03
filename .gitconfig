@@ -4,19 +4,21 @@
 	# View the last commit
 	last = log -1 HEAD
 	# View the current working tree status using the short format
-	s = status -s
+	stat = status -s
 	# Show the diff between the latest commit and the current state
-	d = !"git diff-index --quiet HEAD -- || clear; git diff --patch-with-stat"
+	diff-latest = !"git diff-index --quiet HEAD -- || clear; git diff --patch-with-stat"
 	# `git di $number` shows the diff between the state `$number` revisions ago and the current state
-	di = !"d() { git diff --patch-with-stat HEAD~$1; }; git diff-index --quiet HEAD -- || clear; d"
+	diff-n = !"d() { git diff --patch-with-stat HEAD~$1; }; git diff-index --quiet HEAD -- || clear; d"
 	# Highlight word changes instead of full lines
-	wd = diff --word-diff
+	diff-words = diff --word-diff
+	# Colorful diff
+	diff-colorful = !"d() { git diff --no-index --color-words \"$@\"; }; d"
 	# Pull in remote changes for the current repository and all its submodules
-	p = !"git pull; git submodule foreach git pull origin master"
+	pull-all = !"git pull; git submodule foreach git pull origin master"
 	# Clone a repository including all submodules
-	c = clone --recursive
+	cloner = clone --recursive
 	# Commit all changes
-	ca = !git add -A && git commit -av
+	commit-all = !git add -A && git commit -av
 	# Switch to a branch, creating it if necessary
 	go = checkout -B
 	# Show verbose output about tags, branches or remotes
@@ -26,7 +28,7 @@
 	# Credit an author on the latest commit
 	credit = "!f() { git commit --amend --author \"$1 <$2>\" -C HEAD; }; f"
 	# Interactive rebase with the given number of latest commits
-	reb = "!r() { git rebase -i HEAD~$1; }; r"
+	rebase-n = "!r() { git rebase -i HEAD~$1; }; r"
 	# Undo a `git push`
 	undopush = push -f origin HEAD^:master
 	# Unstage files for commit
@@ -38,7 +40,13 @@
 	# CD to the root of the project
 	cd-top = !"cd $(git rev-parse --show-toplevel)"
 	# Show changed files that have not been pushed
-	outgoing = git log origin/master..HEAD
+	outgoing = log origin/master..HEAD
+	# Stop tracking a file
+	forget = "!r() { git rm --cached \"$@\"; }; r"
+	# Add 'upstream' remote
+	upstream = "!r() { git remote add upstream \"$@\" }; r"
+	# Merge upstream/master changes into current branch
+	merge-up = !"git fetch origin -v; git fetch upstream -v; git merge upstream/master"
 
 [core]
 	# Use custom `.gitignore` and `.gitattributes`

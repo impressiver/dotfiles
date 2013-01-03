@@ -59,7 +59,7 @@ if install 'nginx'; then
     fi
   fi
   # TODO: Prompt to see if Nginx should be set up to run on port 80
-  mkdir -p $HOME/Library/LaunchAgents
+  mkdir -p $HOME/Library/LaunchDaemons
   cp "$(brew --prefix nginx)/homebrew.mxcl.nginx.plist" "$HOME/Library/LaunchAgents/"
   launchctl load -w $HOME/Library/LaunchAgents/homebrew.mxcl.nginx.plist
 
@@ -147,20 +147,22 @@ fi
 # fi
 
 # npm
-curl https://npmjs.org/install.sh | sh
-export NODE_PATH=/usr/local/lib/node_modules
-echo -e "\n# npm" >> $HOME/.extra
-echo "export NODE_PATH=/usr/local/lib/node_modules" >> $HOME/.extra
-# Some also suggest adding '/usr/local/share/npm/bin' to $PATH
+if [ ! -d /usr/local/bin/npm ]
+  curl https://npmjs.org/install.sh | sh
+  export NODE_PATH=/usr/local/lib/node_modules
+  echo -e "\n# npm" >> $HOME/.extra
+  echo "export NODE_PATH=/usr/local/lib/node_modules" >> $HOME/.extra
+  # Some also suggest adding '/usr/local/share/npm/bin' to $PATH
 
-# RCEnvironment (http://www.rubicode.com/Software/RCEnvironment/)
-# if [ ! -d $HOME/Library/PreferencePanes/RCEnvironment.prefPane ]; then
-#   hdiutil attach http://www.rubicode.com/Downloads/RCEnvironment-1.4.X.dmg
-#   mkdir -p $HOME/Library/PreferencePanes
-#   cp -R /Volumes/RCEnvironment-1.4.X/RCEnvironment.prefPane $HOME/Library/PreferencePanes
-# else
-#   echo "[RCEnvironment] RCEnvironment PrefPane already installed"
-# fi
+  # RCEnvironment (http://www.rubicode.com/Software/RCEnvironment/)
+  # if [ ! -d $HOME/Library/PreferencePanes/RCEnvironment.prefPane ]; then
+  #   hdiutil attach http://www.rubicode.com/Downloads/RCEnvironment-1.4.X.dmg
+  #   mkdir -p $HOME/Library/PreferencePanes
+  #   cp -R /Volumes/RCEnvironment-1.4.X/RCEnvironment.prefPane $HOME/Library/PreferencePanes
+  # else
+  #   echo "[RCEnvironment] RCEnvironment PrefPane already installed"
+  # fi
+fi
 
 ### Desktop Apps ###
 
