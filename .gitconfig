@@ -18,7 +18,7 @@
 	# Clone a repository including all submodules
 	cloner = clone --recursive
 	# Commit all changes
-	commit-all = !git add -A && git commit -av
+	commit-all = !"git add -A && git commit -av"
 	# Switch to a branch, creating it if necessary
 	go = checkout -B
 	# Show verbose output about tags, branches or remotes
@@ -46,7 +46,7 @@
 	# Add 'upstream' remote
 	upstream = "!r() { git remote add upstream \"$@\" }; r"
 	# Merge upstream/master changes into current branch
-	merge-up = !"git fetch origin -v; git fetch upstream -v; git merge upstream/master"
+	merge-up = "!r() { upstream=${@:-'upstream'}; git fetch origin -v; git fetch $upstream -v; git merge \"$upstream/master\"; }; r"
 
 [core]
 	# Use custom `.gitignore` and `.gitattributes`

@@ -70,7 +70,7 @@ function hcd()
     if [[ -z "$project_venv" && ! -z "$VIRTUAL_ENV" ]]; then
       # No matching virtualenv, deactivate the active virtual environment
       deactivate
-    elif [ "${active_venv,,}" != "${project_venv,,}" ]; then
+    elif [[ ! -z "$active_venv" && "${active_venv,,}" != "${project_venv,,}" ]]; then
       echo "Activating virtualenv: $project_venv"
       # source "$HOME/virtualenvs/${this_dirname}/bin/activate"
       workon "$project_venv"
