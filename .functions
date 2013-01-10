@@ -1,8 +1,7 @@
 #  Replacement for builtin 'cd', which keeps a separate bash-history for every
 #  project directory.
 #  Source: Aaron Harnly https://github.com/aaronharnly/dotfiles-public/blob/master/.bash-functions.sh#L263
-function hcd()
-{
+function hcd() {
   builtin cd "$@"  # do actual cd
 
   # Short circuit if no projects dir is set
@@ -96,11 +95,6 @@ function hcd()
   fi
 }
 
-# Create a new directory and enter it
-function mkd() {
-	mkdir -p "$@" && cd "$@"
-}
-
 # Go to project directory, allowing tab-completion of subdirectories
 function cdp() {
 	hcd $PROJECTS_DIR/$1
@@ -136,6 +130,29 @@ _cdp() {
     return 0
 }
 complete -F _cdp -o nospace cdp
+
+# Create a new directory and enter it
+function mkd() {
+  mkdir -p "$@" && cd "$@"
+}
+
+# Simple calculator
+function calc() {
+  local result=""
+  result="$(printf "scale=10;$*\n" | bc --mathlib | tr -d '\\\n')"
+  #                       └─ default (when `--mathlib` is used) is 20
+  #
+  if [[ "$result" == *.* ]]; then
+    # improve the output for decimal numbers
+    printf "$result" |
+    sed -e 's/^\./0./'        `# add "0" for cases like ".5"` \
+        -e 's/^-\./-0./'      `# add "0" for cases like "-.5"` \
+        -e 's/0*$//;s/\.$//'   # remove trailing zeros
+  else
+    printf "$result"
+  fi
+  printf "\n"
+}
 
 # Determine size of a file or total size of a directory
 function fs() {
@@ -178,12 +195,13 @@ function phpserver() {
 	php -S "${ip}:${port}"
 }
 
-# Get gzipped file size
+# Compare original and gzipped file size
 function gz() {
-	echo "orig size (bytes): "
-	cat "$1" | wc -c
-	echo "gzipped size (bytes): "
-	gzip -c "$1" | wc -c
+	local origsize=$(wc -c < "$1")
+	local gzipsize=$(gzip -c "$1" | wc -c)
+	local ratio=$(echo "$gzipsize * 100/ $origsize" | bc -l)
+	printf "orig: %d bytes\n" "$origsize"
+	printf "gzip: %d bytes (%2.2f%%)\n" "$gzipsize" "$ratio"
 }
 
 # Test if HTTP compression (RFC 2616 + SDCH) is enabled for a given URL.

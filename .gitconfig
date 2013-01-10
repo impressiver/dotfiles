@@ -7,7 +7,7 @@
 	stat = status -s
 	# Show the diff between the latest commit and the current state
 	diff-latest = !"git diff-index --quiet HEAD -- || clear; git diff --patch-with-stat"
-	# `git di $number` shows the diff between the state `$number` revisions ago and the current state
+	# `git diff-n $number` shows the diff between the state `$number` revisions ago and the current state
 	diff-n = !"d() { git diff --patch-with-stat HEAD~$1; }; git diff-index --quiet HEAD -- || clear; d"
 	# Highlight word changes instead of full lines
 	diff-words = diff --word-diff
