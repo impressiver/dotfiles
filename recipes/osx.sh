@@ -204,6 +204,12 @@ defaults write com.apple.finder ShowHardDrivesOnDesktop -bool true
 defaults write com.apple.finder ShowMountedServersOnDesktop -bool true
 defaults write com.apple.finder ShowRemovableMediaOnDesktop -bool true
 
+# Enable spring loading for directories
+defaults write NSGlobalDomain com.apple.springing.enabled 1
+
+# Delay spring loading for directories
+defaults write NSGlobalDomain com.apple.springing.delay -float 0
+
 # Finder: show hidden files by default
 #defaults write com.apple.Finder AppleShowAllFiles -bool true
 
@@ -459,6 +465,9 @@ defaults write com.apple.Terminal "Startup Window Settings" -string "Kappa"
 
 # Prevent Time Machine from prompting to use new hard drives as backup volume
 defaults write com.apple.TimeMachine DoNotOfferNewDisksForBackup -bool true
+
+# Allow non Time Capsule network hard drives to be used as backup volumes
+defaults write com.apple.systempreferences TMShowUnsupportedNetworkVolumes 1
 
 # Disable local Time Machine backups
 hash tmutil &> /dev/null && sudo tmutil disablelocal

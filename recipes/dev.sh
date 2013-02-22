@@ -120,17 +120,21 @@ fi
 
 # Install MySQL and set to launch at startup
 if install 'mysql'; then
+  mysql_version=$(brew which mysql)
+  mysql_version="${mysql_version#* }"
+
+  tmp_tmpdir=$TMPDIR
   unset TMPDIR
   mysql_install_db --verbose --user=`whoami` --basedir="$(brew --prefix mysql)" --datadir=/usr/local/var/mysql --tmpdir=/tmp
-  cp /usr/local/Cellar/mysql/5.5.25a/homebrew.mxcl.mysql.plist $HOME/Library/LaunchAgents/
+  cp $(brew --cellar mysql)/$mysql_version/homebrew.mxcl.mysql.plist $HOME/Library/LaunchAgents/
   launchctl load -w $HOME/Library/LaunchAgents/homebrew.mxcl.mysql.plist
 
   echo
   read -p "[MySQL] Please enter a password for root (default is blank): "
   echo
   if $REPLY; then
-    /usr/local/Cellar/mysql/5.5.25a/bin/mysqladmin -u root password "$REPLY"
-    /usr/local/Cellar/mysql/5.5.25a/bin/mysqladmin -u root -h $(hostname) password "$REPLY"
+    /usr/local/Cellar/mysql/$mysql_version/bin/mysqladmin -u root password "$REPLY"
+    /usr/local/Cellar/mysql/$mysql_version/bin/mysqladmin -u root -h $(hostname) password "$REPLY"
   fi
 fi
 
