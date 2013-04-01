@@ -33,18 +33,19 @@ echo "Upgrading installed formulae..."
 brew upgrade
 
 # Install GNU core utilities (those that come with OS X are outdated)
-if install 'coreutils'; then
-	#if [[ $PATH == *$(brew --prefix coreutils)/libexec/gnubin* ]]; then
-	if [ -f "$HOME/.path" ]; then
-		if grep -q -e "$(brew --prefix coreutils)/libexec/gnubin" $HOME/.path; then
-			echo "'~/.path' already contains '$(brew --prefix coreutils)/libexec/gnubin'"
-		else
-			sed -i '.backup' "s#^export PATH=\(.*\)\$#export PATH=\1:$(brew --prefix coreutils)\/libexec\/gnubin#" $HOME/.path
-		fi
-	else
-		echo "export PATH=\$PATH:$(brew --prefix coreutils)/libexec/gnubin" > $HOME/.path
-	fi
-fi
+install 'coreutils'
+# if install 'coreutils'; then
+# 	#if [[ $PATH == *$(brew --prefix coreutils)/libexec/gnubin* ]]; then
+# 	if [ -f "$HOME/.path" ]; then
+# 		if grep -q -e "$(brew --prefix coreutils)/libexec/gnubin" $HOME/.path; then
+# 			echo "'~/.path' already contains '$(brew --prefix coreutils)/libexec/gnubin'"
+# 		else
+# 			sed -i '.backup' "s#^export PATH=\(.*\)\$#export PATH=\1:$(brew --prefix coreutils)\/libexec\/gnubin#" $HOME/.path
+# 		fi
+# 	else
+# 		echo "export PATH=\$PATH:$(brew --prefix coreutils)/libexec/gnubin" > $HOME/.path
+# 	fi
+# fi
 
 # Install GNU `find`, `locate`, `updatedb`, and `xargs`, g-prefixed
 install 'findutils'
@@ -63,7 +64,6 @@ install 'wget' 'wget' '--enable-iri'
 # Install Python
 if install 'python' 'Python'; then
 	if [ -f "$HOME/.path" ]; then
-		# TODO: Need to check for case where nginx installation added '/usr/local/sbin'
 		if grep -q -e "$(brew --prefix)/bin:$(brew --prefix)/share/python" $HOME/.path; then
 			echo "'~/.path' already contains '$(brew --prefix)/bin:$(brew --prefix)/share/python'"
 		else
@@ -73,6 +73,7 @@ if install 'python' 'Python'; then
 		# Add OS X default PyObjC libraries to the path
 		if ! grep -q -e "/System/Library/Frameworks/Python.framework/Versions/Current/Extras/lib/python/PyObjC" $HOME/.path; then
 			sed -i '.backup' "s#^export PATH=\(.*\)\$#export PATH=\1:/System/Library/Frameworks/Python.framework/Versions/Current/Extras/lib/python/PyObjC#" $HOME/.path
+		fi
 	else
 		echo "export PATH=$(brew --prefix)/bin:$(brew --prefix)/share/python:\$PATH" > $HOME/.path
 	fi
@@ -95,7 +96,7 @@ if install 'bash-completion'; then
 		echo "Homebrew's bash-completion already sourced in '~/.extra'"
 	else
 ###############################################################################
-	cat >> $HOME/.extra << EOF
+		cat >> $HOME/.extra << EOF
 
 # Homebrew bash-completion
 if [ -f $(brew --prefix)/etc/bash_completion ]; then

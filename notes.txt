@@ -1,0 +1,81 @@
+NOTES:
+- '~/.path' needs to include '/usr/local/bin' by default.
+- Ask to install Python via brew
+	- Make sure '/usr/local/share/python' gets added to the path
+	- Make sure '/System/Library/Frameworks/Python.framework/Versions/Current/Extras/lib/python/PyObjC' gets added to the path
+- mkdir ~/Applications' && brew linkapps at the very end
+
+
+
+wget:
+==> make install
+🍺  /usr/local/Cellar/wget/1.14: 8 files, 720K, built in 43 seconds
+./brew.sh: line 146: syntax error: unexpected end of file
+
+
+
+Nginx:
+In the interest of allowing you to run `nginx` without `sudo`, the default
+port is set to localhost:8080.
+
+If you want to host pages on your local machine to the public, you should
+change that to localhost:80, and run `sudo nginx`. You'll need to turn off
+any other web servers running port 80, of course.
+
+You can start nginx automatically on login running as your user with:
+  mkdir -p ~/Library/LaunchAgents
+  cp /usr/local/Cellar/nginx/1.2.7/homebrew.mxcl.nginx.plist ~/Library/LaunchAgents/
+  launchctl load -w ~/Library/LaunchAgents/homebrew.mxcl.nginx.plist
+
+Though note that if running as your user, the launch agent will fail if you
+try to use a port below 1024 (such as http's default of 80.)
+
+To have launchd start nginx at login:
+    ln -sfv /usr/local/opt/nginx/*.plist ~/Library/LaunchAgents
+Then to load nginx now:
+    launchctl load ~/Library/LaunchAgents/homebrew.mxcl.nginx.plist
+Warning: /usr/local/sbin is not in your PATH
+You can amend this by altering your ~/.bashrc file
+
+
+
+MySQL:
+Set up databases to run AS YOUR USER ACCOUNT with:
+    unset TMPDIR
+    mysql_install_db --verbose --user=`whoami` --basedir="$(brew --prefix mysql)" --datadir=/usr/local/var/mysql --tmpdir=/tmp
+
+To set up base tables in another folder, or use a different user to run
+mysqld, view the help for mysql_install_db:
+    mysql_install_db --help
+
+and view the MySQL documentation:
+  * http://dev.mysql.com/doc/refman/5.5/en/mysql-install-db.html
+  * http://dev.mysql.com/doc/refman/5.5/en/default-privileges.html
+
+To run as, for instance, user "mysql", you may need to `sudo`:
+    sudo mysql_install_db ...options...
+
+A "/etc/my.cnf" from another install may interfere with a Homebrew-built
+server starting up correctly.
+
+To connect:
+    mysql -uroot
+
+To have launchd start mysql at login:
+    ln -sfv /usr/local/opt/mysql/*.plist ~/Library/LaunchAgents
+Then to load mysql now:
+    launchctl load ~/Library/LaunchAgents/homebrew.mxcl.mysql.plist
+Or, if you don't want/need launchctl, you can just run:
+    mysql.server start
+
+
+
+Memcached:
+To have launchd start memcached at login:
+    ln -sfv /usr/local/opt/memcached/*.plist ~/Library/LaunchAgents
+Then to load memcached now:
+    launchctl load ~/Library/LaunchAgents/homebrew.mxcl.memcached.plist
+Or, if you don't want/need launchctl, you can just run:
+    /usr/local/opt/memcached/bin/memcached
+
+

@@ -1,14 +1,14 @@
 # App Versions
-SEQUELPRO_VERSION='0.9.9.1'
-FIREFOX_VERSION='14.0.1'
+SEQUELPRO_VERSION='1.0.1'
+FIREFOX_VERSION='19.0.2'
 FLASH_PLAYER_VERSION='11.4.402.265'
 SUBLIME_TEXT_2_VERSION='2.0.1'
 TEXTMATE_VERSION='1.5.11_r1635'
-DROPBOX_VERSION='1.4.12'
+DROPBOX_VERSION='2.0.0'
 ONEPASSWORD_VERSION='3.8.20'
 CYBERDUCK_VERSION='4.2.1'
-ADIUM_VERSION='1.5.2'
-TRANSMISSION_VERSION='2.61'
+ADIUM_VERSION='1.5.6'
+TRANSMISSION_VERSION='2.77'
 
 INSTALLED_FORMULAE=$(brew list)
 # Functions return exit codes; 0 means OK.
@@ -140,7 +140,10 @@ fi
 
 # Install Memcached and set to launch at startup
 if install 'memcached'; then
-  cp /usr/local/Cellar/memcached/1.4.14/homebrew.mxcl.memcached.plist $HOME/Library/LaunchAgents/
+  memcached_version=$(brew which memcached)¬
+  memcached_version="${memcached_version#* }"¬
+
+  cp /usr/local/Cellar/memcached/$memcached_version/homebrew.mxcl.memcached.plist $HOME/Library/LaunchAgents/
   launchctl load -w $HOME/Library/LaunchAgents/homebrew.mxcl.memcached.plist
 fi
 
@@ -151,7 +154,7 @@ fi
 # fi
 
 # npm
-if [ ! -d /usr/local/bin/npm ]
+if [ ! -d /usr/local/bin/npm ]; then
   curl https://npmjs.org/install.sh | sh
   export NODE_PATH=/usr/local/lib/node_modules
   echo -e "\n# npm" >> $HOME/.extra

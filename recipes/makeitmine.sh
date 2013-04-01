@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Run these recipes after config has completed
-ADDITIONAL_RECIPES=('prefs.sh' 'sprintly.sh');
+ADDITIONAL_RECIPES=('prefs.sh');
 
 # Build default values based on previous values
 if [ -f $HOME/.extra ]; then
