@@ -13,6 +13,8 @@
 	diff-words = diff --word-diff
 	# Colorful diff
 	diff-colorful = !"d() { git diff --no-index --color-words \"$@\"; }; d"
+	# Pull w/ rebase
+	pullr = pull --rebase
 	# Pull in remote changes for the current repository and all its submodules
 	pull-all = !"git pull; git submodule foreach git pull origin master"
 	# Clone a repository including all submodules
@@ -52,7 +54,7 @@
 
 [core]
 	# Use custom `.gitignore` and `.gitattributes`
-	excludesfile = ~/.gitignore
+	excludesfile = /Users/ian/.gitignore
 	attributesfile = ~/.gitattributes
 	# Treat spaces before tabs, lines that are indented with 8 or more spaces, and all kinds of trailing whitespace as an error
 	whitespace = space-before-tab,indent-with-tab,trailing-space
@@ -125,3 +127,14 @@
 	pushInsteadOf = "git://gist.github.com/"
 [url "git://gist.github.com/"]
 	insteadOf = "gist:"
+[user]
+	name = Ian White
+	email = ian@impressiver.com
+[credential]
+	helper = osxkeychain
+[difftool "sourcetree"]
+	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
+	path =
+[mergetool "sourcetree"]
+	cmd = /Applications/SourceTree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
+	trustExitCode = true
