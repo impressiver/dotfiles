@@ -24,6 +24,52 @@ function install(){
 	return $FALSE
 }
 
+function add_path(){
+  local path=$1
+  local comment=$2
+  local prefix=$3
+
+  local export_line="### !!! Do not modify anything below this line !!! ###"
+  local path_line=""
+
+  if $prefix; then
+    path_line="PATH=$path:\$PATH"
+  else
+    path_line="PATH=\$PATH:$path"
+  fi
+
+  # Create the path file if it doesn't exist
+  if [ ! -f "$HOME/.path" ]; then
+    cat > $HOME/.path << EOF
+$export_line
+PATH=\$(brew --prefix)/bin:\$(brew --prefix)/sbin:\$PATH
+export PATH
+EOF
+  fi
+
+  # Check to see if the path being added is a dupe
+  if grep -q -e "$path" $HOME/.path; then
+    echo "~/.path already contains '$path'"
+    return $FALSE
+  else
+    # Add comment line
+    if [ "$comment" ]; then
+    path_line="# $comment\\
+$path_line\\
+"
+    fi
+
+    # Insert new path just above the export line
+    sed -i '.backup' "/$export_line/ i \\
+$path_line\\
+" $HOME/.path
+    return $TRUE
+  fi
+
+  return $FALSE
+}
+
+
 # Make sure we’re using the latest Homebrew
 echo "Updating Homebrew..."
 brew update
@@ -33,19 +79,10 @@ echo "Upgrading installed formulae..."
 brew upgrade
 
 # Install GNU core utilities (those that come with OS X are outdated)
-install 'coreutils'
-# if install 'coreutils'; then
-# 	#if [[ $PATH == *$(brew --prefix coreutils)/libexec/gnubin* ]]; then
-# 	if [ -f "$HOME/.path" ]; then
-# 		if grep -q -e "$(brew --prefix coreutils)/libexec/gnubin" $HOME/.path; then
-# 			echo "'~/.path' already contains '$(brew --prefix coreutils)/libexec/gnubin'"
-# 		else
-# 			sed -i '.backup' "s#^export PATH=\(.*\)\$#export PATH=\1:$(brew --prefix coreutils)\/libexec\/gnubin#" $HOME/.path
-# 		fi
-# 	else
-# 		echo "export PATH=\$PATH:$(brew --prefix coreutils)/libexec/gnubin" > $HOME/.path
-# 	fi
-# fi
+if install 'coreutils'; then
+	#if [[ $PATH == *$(brew --prefix coreutils)/libexec/gnubin* ]]; then
+	add_path '$(brew --prefix coreutils)/libexec/gnubin' 'GNU Coreutils'
+fi
 
 # Install GNU `find`, `locate`, `updatedb`, and `xargs`, g-prefixed
 install 'findutils'
@@ -63,25 +100,17 @@ install 'wget' 'wget' '--enable-iri'
 
 # Install Python
 if install 'python' 'Python'; then
-	if [ -f "$HOME/.path" ]; then
-		if grep -q -e "$(brew --prefix)/bin:$(brew --prefix)/share/python" $HOME/.path; then
-			echo "'~/.path' already contains '$(brew --prefix)/bin:$(brew --prefix)/share/python'"
-		else
-			sed -i '.backup' "s#^export PATH=\(.*\)\$#export PATH=$(brew --prefix)\/bin:$(brew --prefix)\/share\/python:\1#" $HOME/.path
-		fi
+	# TODO: Need to check for case where nginx installation added '/usr/local/sbin'
+	# Should end up as `PATH=$(brew --prefix)/bin:$(brew --prefix)/share/python:$PATH`
+	add_path '$(brew --prefix)/share/python' 'Python' true
 
-		# Add OS X default PyObjC libraries to the path
-		if ! grep -q -e "/System/Library/Frameworks/Python.framework/Versions/Current/Extras/lib/python/PyObjC" $HOME/.path; then
-			sed -i '.backup' "s#^export PATH=\(.*\)\$#export PATH=\1:/System/Library/Frameworks/Python.framework/Versions/Current/Extras/lib/python/PyObjC#" $HOME/.path
-		fi
-	else
-		echo "export PATH=$(brew --prefix)/bin:$(brew --prefix)/share/python:\$PATH" > $HOME/.path
-	fi
+	# Add OS X default PyObjC libraries to the path
+	add_path '/System/Library/Frameworks/Python.framework/Versions/Current/Extras/lib/python/PyObjC' 'OS X built-in PyObjC'
 fi
 
 # Install Bash 4
 if install 'bash'; then
-	if ! grep -q -e "$(brew --prefix)/bin/bash" $HOME/.path; then
+	if ! grep -q -e "$(brew --prefix)/bin/bash" /etc/shells; then
 		echo "Need permission to add '$(brew --prefix)/bin/bash' (bash 4) to '/etc/shells'"
 		sudo echo $(brew --prefix)/bin/bash >> /etc/shells
 		echo "Setting login shell to bash 4"
@@ -96,7 +125,7 @@ if install 'bash-completion'; then
 		echo "Homebrew's bash-completion already sourced in '~/.extra'"
 	else
 ###############################################################################
-		cat >> $HOME/.extra << EOF
+	cat >> $HOME/.extra << EOF
 
 # Homebrew bash-completion
 if [ -f $(brew --prefix)/etc/bash_completion ]; then

@@ -39,25 +39,27 @@ function install(){
 # We're going to need this later
 mkdir -p $HOME/Library/LaunchAgents
 
+# Install Git (just in case)
+install 'git' 'Git'
+if [ "$GIT_AUTHOR_EMAIL" ]; then
+  echo "Configuring global Git user ($GIT_AUTHOR_NAME <$GIT_AUTHOR_EMAIL>")
+  git config --global user.name "$GIT_AUTHOR_NAME"
+  git config --global user.email "$GIT_AUTHOR_EMAIL"
+  git config --global credential.helper osxkeychain
+fi
+
 # CLI Git repository browser
-install 'tig' 'Tig'
+# install 'tig' 'Tig'
 
 # "Hub" for Github (http://defunkt.io/hub/)
 install 'hub' 'Hub'
 if ! grep -q -e "^alias git=" $HOME/.extra; then
-  echo -e "\n# Replace git with hub (which does everything git does and more)" >> $HOME/.extra
+  echo -e "\n# Replace 'git' with 'hub' (which does everything git does and more)" >> $HOME/.extra
   echo "alias git=hub" >> $HOME/.extra
 fi
 
 # Nginx
 if install 'nginx'; then
-  if ! grep -q -e "$(brew --prefix)/sbin" $HOME/.path; then
-    if grep -q -e "$(brew --prefix)/bin" $HOME/.path; then
-      sed -i '.backup' "s#$(brew --prefix)/bin#$(brew --prefix)/bin:$(brew --prefix)/sbin#" $HOME/.path
-    else
-      sed -i '.backup' "s#^export PATH=\(.*\)\$#export PATH=$(brew --prefix)/sbin:\1#" $HOME/.path
-    fi
-  fi
   # TODO: Prompt to see if Nginx should be set up to run on port 80
   mkdir -p $HOME/Library/LaunchDaemons
   cp "$(brew --prefix nginx)/homebrew.mxcl.nginx.plist" "$HOME/Library/LaunchAgents/"
@@ -140,8 +142,8 @@ fi
 
 # Install Memcached and set to launch at startup
 if install 'memcached'; then
-  memcached_version=$(brew which memcached)¬
-  memcached_version="${memcached_version#* }"¬
+  memcached_version=$(brew which memcached)
+  memcached_version="${memcached_version#* }"
 
   cp /usr/local/Cellar/memcached/$memcached_version/homebrew.mxcl.memcached.plist $HOME/Library/LaunchAgents/
   launchctl load -w $HOME/Library/LaunchAgents/homebrew.mxcl.memcached.plist

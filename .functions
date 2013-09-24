@@ -1,6 +1,6 @@
-#  Replacement for builtin 'cd', which keeps a separate bash-history for every
-#  project directory.
-#  Source: Aaron Harnly https://github.com/aaronharnly/dotfiles-public/blob/master/.bash-functions.sh#L263
+#  Replacement for builtin 'cd', which keeps a separate bash-history for each
+#  project within the project directory.
+#  Based on: Aaron Harnly https://github.com/aaronharnly/dotfiles-public/blob/master/.bash-functions.sh#L263
 function hcd() {
   builtin cd "$@"  # do actual cd
 
@@ -13,11 +13,13 @@ function hcd() {
   local this_dirname=$(basename "$PWD")
   local parent_dir=$(dirname "$PWD")
   local default_histfile="$HOME/.bash_history"
-  local active_venv=$(basename "$VIRTUAL_ENV")
-  local project_dir project_name project_venv
+
+  local active_venv=$(basename "$VIRTUAL_ENV") # Deprecated, see below
+
+  local project_dir project_name walk_dir project_rc project_venv
 
   # If we're entering a project directory, load the project bash history and
-  # check for a Python virtual environment
+  # check for a project rc file to run.
   if [[ "$parent_dir" == "$PROJECTS_DIR"* ]]; then
     if [ "$parent_dir" == "$PROJECTS_DIR" ]; then
       project_name="${this_dirname}"
@@ -45,35 +47,56 @@ function hcd() {
       export PROJECT="$project_name"
     fi
 
-    # Load the project virtual environment
-    # 1. Walk up to the project root looking for a '.venv' file
-    # 2. Check the list of virtualenvs for one matching the project name
-    local walk_dir="$this_dir"
-    while [[ -z "$project_venv" && "$walk_dir" == "$project_dir"* ]]; do
-      # Check for a .venv file and then move up a directory
-      if [ -e "${walk_dir}/.venv" ]; then
-        project_venv=$(cat "${walk_dir}/.venv")
+    # Find and execute the nearest project init script
+    # 1. Walk up to the project root looking for a '.projectrc' file
+    # 2. Run it
+    walk_dir="$this_dir"
+    while [[ -z "$project_rc" && "$walk_dir" == "$project_dir"* ]]; do
+      # Check for a .projectrc file and then move up a directory
+      if [ -e "${walk_dir}/.projectrc" ]; then
+        project_rc="${walk_dir}/.projectrc"
+        . "$project_rc"
       fi
       walk_dir=$(dirname "$walk_dir")
     done
 
-    # If no .venv file was found, try to match the project directory name to an
-    # existing virtual environment name
-    # TODO: Use '$VIRTUALENVWRAPPER_HOOK_DIR/get_env_details' instead
-    if [[ -z "$project_venv" && -d "$WORKON_HOME/${project_name}" ]]; then
-      # Found a virtualenv matching the project name
-      project_venv="$project_name"
-    fi
+    # TODO: Deprecated. Remove after saying goodbye.
+    # This should be moved to an example `.projectrc` file for Pythonistas as a way
+    # to walk the path and load any matching Python virtual environment.
+    if [[ -z "$project_rc" ]]; then
+      # Load the project's Python virtual environment
+      # 1. Walk up to the project root looking for a '.venv' file
+      # 2. Check the list of virtualenvs for one matching the project name
+      walk_dir="$this_dir"
+      # TODO: (IW) Deprecated, use `.projectrc` instead
+      while [[ -z "$project_venv" && "$walk_dir" == "$project_dir"* ]]; do
+        # Check for a .venv file and then move up a directory
+        if [ -e "${walk_dir}/.venv" ]; then
+          project_venv=$(cat "${walk_dir}/.venv")
+        fi
+        walk_dir=$(dirname "$walk_dir")
+      done
 
-    # Load/unload virtualenv
-    if [[ -z "$project_venv" && ! -z "$VIRTUAL_ENV" ]]; then
-      # No matching virtualenv, deactivate the active virtual environment
-      deactivate
-    elif [ ! -z "$project_venv" ] && [[ -z "$active_venv" || "${active_venv,,}" != "${project_venv,,}" ]]; then
-      echo "Activating virtualenv: $project_venv"
-      # source "$HOME/virtualenvs/${this_dirname}/bin/activate"
-      workon "$project_venv"
+      # If no .venv file was found, try to match the project directory name to an
+      # existing virtual environment name
+      # TODO: Use '$VIRTUALENVWRAPPER_HOOK_DIR/get_env_details' instead
+      if [[ -z "$project_venv" && -d "$WORKON_HOME/${project_name}" ]]; then
+        # Found a virtualenv matching the project name
+        project_venv="$project_name"
+      fi
+
+      # Load/unload virtualenv
+      if [[ -z "$project_venv" && ! -z "$VIRTUAL_ENV" ]]; then
+        # No matching virtualenv, deactivate the active virtual environment
+        deactivate
+      elif [ ! -z "$project_venv" ] && [[ -z "$active_venv" || "${active_venv,,}" != "${project_venv,,}" ]]; then
+        echo "Activating virtualenv: $project_venv"
+        # source "$HOME/virtualenvs/${this_dirname}/bin/activate"
+        workon "$project_venv"
+      fi
     fi
+    # End of deprecation
+
   elif [ ! -z "$PROJECT" ]; then
     echo "Leaving $PROJECT"
 
