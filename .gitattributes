@@ -1,3 +1,4 @@
 # Automatically normalize line endings for all text-based files except ssh keys
-* text=auto
-*.pem -crlf -text
+#* text=auto
+#*.pem -crlf -text
+# Disabled because of https://github.com/mathiasbynens/dotfiles/issues/149 :(

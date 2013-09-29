@@ -15,24 +15,7 @@ INSTALLED_FORMULAE=$(brew list)
 TRUE=0
 FALSE=1
 
-# Homebrew formula install helper
-function install(){
-  local formula=$1
-  local title=${2:-$formula}
-  local args=$3
-
-  if [[ ! "$INSTALLED_FORMULAE" == *$formula* ]]; then
-    echo "Installing $title"
-    brew install $formula $args
-
-    return $TRUE
-  else
-    echo "$title already installed"
-    return $FALSE
-  fi
-
-  return $FALSE
-}
+source "lib/utils"
 
 ### CLI Apps ###
 

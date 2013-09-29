@@ -1,0 +1,78 @@
+### Add a new entry in ~/.path
+### --------------------------
+function add_path(){
+  local path=$1
+  local comment=$2
+  local prefix=$3
+
+  local export_line="### !!! Do not modify anything below this line !!! ###"
+  local path_line=""
+
+  if $prefix; then
+    path_line="PATH=$path:\$PATH"
+  else
+    path_line="PATH=\$PATH:$path"
+  fi
+
+  # Create the path file if it doesn't exist
+  if [ ! -f "$HOME/.path" ]; then
+    cat > $HOME/.path << EOF
+$export_line
+PATH=\$(brew --prefix)/bin:\$(brew --prefix)/sbin:\$PATH
+export PATH
+EOF
+  fi
+
+  # Check to see if the path being added is a dupe
+  if grep -q -e "$path" $HOME/.path; then
+    echo "~/.path already contains '$path'"
+    return $FALSE
+  else
+    # Add comment line
+    if [ "$comment" ]; then
+    path_line="# $comment\\
+$path_line\\
+"
+    fi
+
+    # Insert new path just above the export line
+    sed -i '.backup' "/$export_line/ i \\
+$path_line\\
+" $HOME/.path
+    return $TRUE
+  fi
+
+  return $FALSE
+}
+
+
+### Homebrew formula install helpers
+### --------------------------------
+function brewery(){
+  local repo=$1
+  local formula=$2
+  local title=${3:-$formula}
+  local args=$4
+
+  if [[ ! "$INSTALLED_FORMULAE" == *$formula* ]]; then
+    echo "Installing $title"
+    $repo install $formula $args
+
+    return $TRUE
+  else
+    echo "$title already installed"
+    return $FALSE
+  fi
+
+  return $FALSE
+}
+
+# Homebrew installs
+function install(){
+  brewery 'brew' $@
+}
+
+# Cask installs (Applications)
+function install_cask(){
+  brewery 'brew cask' $@
+}

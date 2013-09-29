@@ -36,3 +36,7 @@ export MANPAGER="less -X"
 # Common directories
 export PROJECTS_DIR="$HOME/Projects"
 export DROPBOX_DIR="$HOME/Dropbox"
+
+# TODO: (IW) Move to ~/.extra
+# Link Homebrew casks in `/Applications` rather than `~/Applications`
+export HOMEBREW_CASK_OPTS="--appdir=/Applications"

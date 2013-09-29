@@ -1,12 +1,12 @@
 [alias]
 	# View the SHA, description, and history graph of the latest 20 commits
-	l = log --pretty=oneline -n 20 --graph
+	l = log --pretty=oneline -n 20 --graph --abbrev-commit
 	# View the last commit
 	last = log -1 HEAD
 	# View the current working tree status using the short format
 	stat = status -s
 	# Show the diff between the latest commit and the current state
-	diff-latest = !"git diff-index --quiet HEAD -- || clear; git diff --patch-with-stat"
+	diff-latest = !"git diff-index --quiet HEAD -- || clear; git --no-pager diff --patch-with-stat"
 	# `git diff-n $number` shows the diff between the state `$number` revisions ago and the current state
 	diff-n = !"d() { git diff --patch-with-stat HEAD~$1; }; git diff-index --quiet HEAD -- || clear; d"
 	# Highlight word changes instead of full lines
@@ -56,11 +56,15 @@
 	# Use custom `.gitignore` and `.gitattributes`
 	excludesfile = /Users/ian/.gitignore
 	attributesfile = ~/.gitattributes
-	# Treat spaces before tabs, lines that are indented with 8 or more spaces, and all kinds of trailing whitespace as an error
-	whitespace = space-before-tab,indent-with-tab,trailing-space
+	# Treat spaces before tabs, lines that are indented with 8 or more spaces, and
+	# all kinds of trailing whitespace as an error.
+	# [default] trailing-space: looks for spaces at the end of a line
+	# [default] space-before-tab: looks for spaces before tabs at the beginning of
+	# a line
+	whitespace = space-before-tab,indent-with-non-tab,trailing-space
 	# Let Git handle line endings automatically
 	autocrlf = input
-	# Use Sublime Text 2 as the default editor
+	# Use Sublime Text as the default editor
 	editor = subl -n -w
 
 [advice]
@@ -68,7 +72,8 @@
 	statusHints = false
 
 [color]
-	# Use colors in Git commands that are capable of colored output when outputting to the terminal
+	# Use colors in Git commands that are capable of colored output when
+	# outputting to the terminal. (This is the default setting in Git ≥ 1.8.4.)
 	ui = auto
 
 [color "branch"]
@@ -127,14 +132,6 @@
 	pushInsteadOf = "git://gist.github.com/"
 [url "git://gist.github.com/"]
 	insteadOf = "gist:"
-[user]
-	name = Ian White
-	email = ian@impressiver.com
+
 [credential]
 	helper = osxkeychain
-[difftool "sourcetree"]
-	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
-	path =
-[mergetool "sourcetree"]
-	cmd = /Applications/SourceTree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
-	trustExitCode = true

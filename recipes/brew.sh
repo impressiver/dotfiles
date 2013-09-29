@@ -6,69 +6,7 @@ INSTALLED_FORMULAE=$(brew list)
 TRUE=0
 FALSE=1
 
-function install(){
-	local formula=$1
-	local title=${2:-$formula}
-	local args=$3
-
-	if [[ ! "$INSTALLED_FORMULAE" == *$formula* ]]; then
-		echo "Installing $title"
-		brew install $formula $args
-
-		return $TRUE
-	else
-		echo "$title already installed"
-		return $FALSE
-	fi
-
-	return $FALSE
-}
-
-function add_path(){
-  local path=$1
-  local comment=$2
-  local prefix=$3
-
-  local export_line="### !!! Do not modify anything below this line !!! ###"
-  local path_line=""
-
-  if $prefix; then
-    path_line="PATH=$path:\$PATH"
-  else
-    path_line="PATH=\$PATH:$path"
-  fi
-
-  # Create the path file if it doesn't exist
-  if [ ! -f "$HOME/.path" ]; then
-    cat > $HOME/.path << EOF
-$export_line
-PATH=\$(brew --prefix)/bin:\$(brew --prefix)/sbin:\$PATH
-export PATH
-EOF
-  fi
-
-  # Check to see if the path being added is a dupe
-  if grep -q -e "$path" $HOME/.path; then
-    echo "~/.path already contains '$path'"
-    return $FALSE
-  else
-    # Add comment line
-    if [ "$comment" ]; then
-    path_line="# $comment\\
-$path_line\\
-"
-    fi
-
-    # Insert new path just above the export line
-    sed -i '.backup' "/$export_line/ i \\
-$path_line\\
-" $HOME/.path
-    return $TRUE
-  fi
-
-  return $FALSE
-}
-
+source "lib/utils"
 
 # Make sure we’re using the latest Homebrew
 echo "Updating Homebrew..."
@@ -89,14 +27,6 @@ install 'findutils'
 
 # Install wget with IRI support
 install 'wget' 'wget' '--enable-iri'
-
-# Install RingoJS and Narwhal
-# if [[ ! "$INSTALLED_FORMULAE" == *ringojs* ]]; then
-# 	echo "Installing RingoJS and Narwal"
-# 	# Note that the order in which these are installed is important; see http://git.io/brew-narwhal-ringo.
-# 	brew install ringojs
-# 	brew install narwhal
-# fi
 
 # Install Python
 if install 'python' 'Python'; then
@@ -153,6 +83,7 @@ fi
 install 'ack'
 install 'rename'
 install 'tree'
+install 'pigz'
 #brew install exiv2
 install 'git' 'Git'
 #brew install imagemagick
@@ -160,6 +91,14 @@ install 'lynx' 'Lynx'
 install 'node' 'NodeJS'
 install 'rhino' 'RhinoJS'
 install 'webkit2png'
+
+# Add Homebrew Cask for Applications
+brew tap phinze/homebrew-cask
+brew install brew-cask
+
+install_cask dropbox
+install_cask google-chrome
+install_cask vlc
 
 # Remove outdated versions from the cellar
 echo "Cleaning up..."
