@@ -20,6 +20,10 @@ export HISTIGNORE="ls:cd:cd -:pwd:exit:date:* --help"
 # Append the last command to the history file before issuing a new prompt
 export PROMPT_COMMAND="history -a; $PROMPT_COMMAND"
 
+# Terminal colors
+export CLICOLOR=1
+export LSCOLORS=GxFxCxDxBxegedabagaced
+
 # Show color output for grep
 export GREP_COLORS='ms=01;34:mc=01;34:sl=:cx=:fn=35:ln=32:bn=32:se=36'
 export GREP_OPTIONS='--color=auto'
