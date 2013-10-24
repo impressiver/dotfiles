@@ -15,6 +15,7 @@ INSTALLED_FORMULAE=$(brew list)
 TRUE=0
 FALSE=1
 
+cd "$(dirname "$0")"
 source "lib/utils"
 
 ### CLI Apps ###
@@ -25,7 +26,7 @@ mkdir -p $HOME/Library/LaunchAgents
 # Install Git (just in case)
 install 'git' 'Git'
 if [ "$GIT_AUTHOR_EMAIL" ]; then
-  echo "Configuring global Git user ($GIT_AUTHOR_NAME <$GIT_AUTHOR_EMAIL>")
+  echo "Configuring global Git user ($GIT_AUTHOR_NAME <$GIT_AUTHOR_EMAIL>)"
   git config --global user.name "$GIT_AUTHOR_NAME"
   git config --global user.email "$GIT_AUTHOR_EMAIL"
   git config --global credential.helper osxkeychain
@@ -63,7 +64,7 @@ fi
 if [ ! -e /usr/local/bin/python ]; then
   echo "Skipping virtualenv setup. Python was not installed by Homebrew."
 else
-  if [ ! -e /usr/local/share/python/pip ]; then
+  if [ ! -e /usr/local/bin/pip ]; then
     echo "Installing pip"
     easy_install pip
   fi

@@ -18,7 +18,7 @@ function add_path(){
   if [ ! -f "$HOME/.path" ]; then
     cat > $HOME/.path << EOF
 $export_line
-PATH=\$(brew --prefix)/bin:\$(brew --prefix)/sbin:\$PATH
+PATH=\$HOME/bin:\$(brew --prefix)/bin:\$(brew --prefix)/sbin:\$PATH
 export PATH
 EOF
   fi

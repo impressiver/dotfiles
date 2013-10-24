@@ -6,6 +6,7 @@ INSTALLED_FORMULAE=$(brew list)
 TRUE=0
 FALSE=1
 
+cd "$(dirname "$0")"
 source "lib/utils"
 
 # Make sure we’re using the latest Homebrew
