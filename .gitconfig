@@ -23,6 +23,8 @@
 	commit-all = !"git add -A && git commit -av"
 	# Switch to a branch, creating it if necessary
 	go = checkout -B
+	# Switch to master
+	go-master = checkout master
 	# Show verbose output about tags, branches or remotes
 	tags = tag -l
 	branches = branch -a
@@ -31,6 +33,8 @@
 	credit = "!f() { git commit --amend --author \"$1 <$2>\" -C HEAD; }; f"
 	# Interactive rebase with the given number of latest commits
 	rebase-n = "!r() { git rebase -i HEAD~$1; }; r"
+	# Undo a `git commit`
+	undo = reset --soft 'HEAD^'
 	# Undo a `git push`
 	undopush = push -f origin HEAD^:master
 	# Unstage files for commit
@@ -39,8 +43,8 @@
 	accept-ours = "!f() { files=\"$@\"; [ -z $files ] && files='.'; git checkout --ours -- $files; git add -u $files; }; f"
 	# Accept the incoming changes to resolve conflicts
 	accept-theirs = "!f() { files=\"$@\"; [ -z $files ] && files='.'; git checkout --theirs -- $files; git add -u $files; }; f"
-	# CD to the root of the project
-	cd-top = !"cd $(git rev-parse --show-toplevel)"
+	# Echo the root path for the repo
+	top = !"echo $(git rev-parse --show-toplevel)"
 	# Show changed files that have not been pushed
 	outgoing = log origin/master..HEAD
 	# Stop tracking a file
@@ -53,8 +57,11 @@
 	apply-pullrequest = "!r() { curl \"$@\" | git am }; r"
 
 [core]
+	# Prevent rebase issues on OS X
+	# See: http://git.661346.n2.nabble.com/rebase-strange-failures-to-apply-patc-3-way-td7579125i20.html
+	trustctime = false
 	# Use custom `.gitignore` and `.gitattributes`
-	excludesfile = /Users/ian/.gitignore
+	excludesfile = ~/.gitignore
 	attributesfile = ~/.gitattributes
 	# Treat spaces before tabs, lines that are indented with 8 or more spaces, and
 	# all kinds of trailing whitespace as an error.
@@ -62,8 +69,8 @@
 	# [default] space-before-tab: looks for spaces before tabs at the beginning of
 	# a line
 	whitespace = space-before-tab,indent-with-non-tab,trailing-space
-	# Let Git handle line endings automatically
-	autocrlf = input
+	# Leave line endings alone
+	autocrlf = false
 	# Use Sublime Text as the default editor
 	editor = subl -n -w
 
