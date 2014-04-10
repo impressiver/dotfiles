@@ -2,22 +2,37 @@
 #  project within the project directory.
 #  Based on: Aaron Harnly https://github.com/aaronharnly/dotfiles-public/blob/master/.bash-functions.sh#L263
 function hcd() {
-  builtin cd "$@"  # do actual cd
-
   # Short circuit if no projects dir is set
   if [ -z "$PROJECTS_DIR" ]; then
-    return
+    return builtin cd "$@"  # just cd
   fi
 
+  local target_dir=$@
   local this_dir="$PWD"
   local this_dirname=$(basename "$PWD")
   local parent_dir=$(dirname "$PWD")
   local default_histfile="$HOME/.bash_history"
 
+  local project_dir project_name walk_dir project_rc
+
+  # cd to project root if called w/ no args and in a project sub-path
+  if [ -z "$@" ] && [ "$PROJECT" ] && [[ "$parent_dir" == "$PROJECTS_DIR"* ]]; then
+    project_dir="${PROJECTS_DIR}/${PROJECT}"
+
+    if [[ "$parent_dir" == "$project_dir"* ]]; then
+      target_dir="$project_dir"
+    fi
+  fi
+  
+  builtin cd $target_dir  # do actual cd
+
+  # Update local vars after cd
+  this_dir="$PWD"
+  this_dirname=$(basename "$PWD")
+  parent_dir=$(dirname "$PWD")
+
   # local active_venv=$(basename "$VIRTUAL_ENV") # Deprecated, see below
   # local project_venv
-
-  local project_dir project_name walk_dir project_rc
 
   # echo "$parent_dir : $PROJECTS_DIR"
 
@@ -35,7 +50,7 @@ function hcd() {
 
     # Load project bash history
     if [ "$PROJECT" != "${project_name}" ]; then
-      echo "Loading ${project_name}"
+      echo "${PURPLE}Loading ${project_name}${RESET}"
 
       history -a # append new entries to current history file
       local hist_dir="$HOME/.bash_history.d${project_dir}"
@@ -100,7 +115,7 @@ function hcd() {
     # fi
     # # End of deprecation
   elif [ ! -z "$PROJECT" ]; then
-    echo "Leaving $PROJECT"
+    echo "${PURPLE}Leaving $PROJECT${RESET}"
 
     # Load default bash history
     if [ "$HISTFILE" != "${DEFAULT_HISTFILE:-default_histfile}" ]; then

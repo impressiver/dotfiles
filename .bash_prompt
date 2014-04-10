@@ -45,12 +45,16 @@ export RESET
 
 function parse_git_dirty() {
 	# U+26A1 HIGH VOLTAGE SIGN (⚡)
-	[[ $(git status 2> /dev/null | tail -n1) != *"working directory clean"* ]] && echo "⚡"
+	[[ -n $(git branch 2> /dev/null) ]] && [[ $(git status 2> /dev/null | tail -n1) != *"working directory clean"* ]] && echo " ⚡"
 }
 
 function parse_git_branch() {
-	git branch --no-color 2> /dev/null | sed -e '/^[^*]/d' -e "s/* \(.*\)/\1$(parse_git_dirty)/"
+	[[ -n $(git branch 2> /dev/null) ]] && git branch --no-color 2> /dev/null | sed -e '/^[^*]/d' -e "s/* \(.*\)/ \1/"
 }
 
-export PS1="\[${BOLD}${MAGENTA}\]\u \[$WHITE\]at \[$ORANGE\]\h \[$WHITE\]in \[$GREEN\]\w\[$WHITE\]\$([[ -n \$(git branch 2> /dev/null) ]] && echo \" on \")\[$PURPLE\]\$(parse_git_branch)\[$WHITE\]\n\$ \[$RESET\]"
+function parse_project() {
+	echo "${PROJECT:-$(basename "$(git rev-parse --show-toplevel 2> /dev/null)")}"
+}
+
+export PS1="\[${BOLD}${MAGENTA}\]\u \[$WHITE\]at \[$ORANGE\]\h \[$WHITE\]in \[$ORANGE\]\w\[$WHITE\]\$([ \$(parse_project) ] && echo \" on \")\[$PURPLE\]\$(parse_project)\[$GREEN\]\$(parse_git_branch)\[$WHITE\]\$(parse_git_dirty)\n\$ \[$RESET\]"
 export PS2="\[$ORANGE\]→ \[$RESET\]"
