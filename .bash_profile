@@ -37,6 +37,13 @@ complete -o "nospace" -W "Contacts Calendar Dock Finder Mail Safari iTunes Syste
 
 # If possible, add tab completion for many more commands
 [ -f /etc/bash_completion ] && source /etc/bash_completion
+[ -f /usr/local/etc/bash_completion ] && source /usr/local/etc/bash_completion
+
+# Trap and echo non-zero exit codes
+EC() {
+  echo -e '\e[1;33m'trapped exit code $? from pid $!'\e[m\n'
+}
+trap EC ERR
 
 # Finally, perform directory check to load project context
 hcd .

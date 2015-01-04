@@ -1,0 +1,41 @@
+# Increase max open files limit
+#ulimit -n 2048
+
+# Git credentials
+GIT_AUTHOR_NAME="Ian White"
+GIT_AUTHOR_EMAIL="ian@impressiver.com"
+
+GIT_COMMITTER_NAME="$GIT_AUTHOR_NAME"
+GIT_COMMITTER_EMAIL="$GIT_AUTHOR_EMAIL"
+
+HOMEBREW_GITHUB_API_TOKEN='ba41f73f8d61b37da5d35834ba5e76fda3113f8c'
+
+# Homebrew bash-completion
+if [ -f /usr/local/etc/bash_completion ]; then
+	. /usr/local/etc/bash_completion
+fi
+
+# Replace 'git' with 'hub' (which does everything git does and more)
+alias git=hub
+
+# virtualenvwrapper
+export WORKON_HOME=~/.virtualenvs
+export PROJECT_HOME=~/Projects
+source virtualenvwrapper_lazy.sh
+
+# virtualenvwrapper
+export WORKON_HOME=~/.virtualenvs
+export PROJECT_HOME=~/Projects
+source virtualenvwrapper_lazy.sh
+
+# virtualenvwrapper
+export WORKON_HOME=~/.virtualenvs
+export PROJECT_HOME=~/Projects
+source virtualenvwrapper_lazy.sh
+
+# nvm
+export NVM_DIR=~/.nvm
+source $(brew --prefix nvm)/nvm.sh
+
+# Shared Prefs (dotfiles/recipes/prefs.sh)
+export SHARED_PREFERENCES_DIR='/Users/iwhite/Dropbox/.dotfiles/Library/Application Support'

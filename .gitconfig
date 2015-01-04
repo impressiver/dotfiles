@@ -43,8 +43,8 @@
 	accept-ours = "!f() { files=\"$@\"; [ -z $files ] && files='.'; git checkout --ours -- $files; git add -u $files; }; f"
 	# Accept the incoming changes to resolve conflicts
 	accept-theirs = "!f() { files=\"$@\"; [ -z $files ] && files='.'; git checkout --theirs -- $files; git add -u $files; }; f"
-	# Echo the root path for the repo
-	top = !"echo $(git rev-parse --show-toplevel)"
+	# CD to the root of the project
+	cd-top = !"cd $(git rev-parse --show-toplevel)"
 	# Show changed files that have not been pushed
 	outgoing = log origin/master..HEAD
 	# Stop tracking a file
@@ -68,8 +68,11 @@
 	# [default] trailing-space: looks for spaces at the end of a line
 	# [default] space-before-tab: looks for spaces before tabs at the beginning of
 	# a line
-	whitespace = space-before-tab,indent-with-non-tab,trailing-space
-	# Leave line endings alone
+	whitespace = space-before-tab,trailing-space
+	# Disable line automatic line ending mods (breaks random things)
+	# See:
+	#		http://stackoverflow.com/questions/2016404/git-status-shows-modifications-git-checkout-file-doesnt-remove-them
+	#
 	autocrlf = false
 	# Use Sublime Text as the default editor
 	editor = subl -n -w
