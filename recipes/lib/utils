@@ -48,7 +48,7 @@ $path_line\\
 
 ### Homebrew formula install helpers
 ### --------------------------------
-function brewery(){
+function brewery() {
   local repo=$1
   local formula=$2
   local title=${3:-$formula}
@@ -67,12 +67,12 @@ function brewery(){
   return $FALSE
 }
 
-# Homebrew installs
-function install(){
+# Homebrew installer
+function brew-install() {
   brewery 'brew' $@
 }
 
-# Cask installs (Applications)
-function install_cask(){
+# Cask installer (Applications)
+function install_cask() {
   brewery 'brew cask' $@
 }

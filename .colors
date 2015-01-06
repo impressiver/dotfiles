@@ -1,0 +1,71 @@
+# Impressiver’s projectrc prompt, modified from...
+# @gf3’s Sexy Bash Prompt, inspired by “Extravagant Zsh Prompt”
+# Shamelessly copied from https://github.com/gf3/dotfiles
+# For more info on terminal colors, see: http://mywiki.wooledge.org/BashFAQ/037
+
+# # Test all 256 term colors (both 'tput' and ascii '\e[')
+# function taste-the-rainbow() {
+#   echo "`printf %$((${COLUMNS}/2-12))s`Using 'tput' `printf %$((${COLUMNS}/2-19))s`Using ASCII '\\e'"
+#   ( x1=`tput op` x2=$"\e[0m" y=`printf %$((${COLUMNS}/2-4))s`
+#   for i in {0..256}; do
+#     local n=00$i;
+#     echo -e ${n:${#n}-3:3} `tput setaf $i; tput setab $i`${y// /=} $x1 $"\e[48;5;${i}m\e[38;5;${i}m"${y// /=} $x2
+#   done )
+# }
+
+
+#
+# Terminal color palette used to pimp '~/.bash_prompt' and script output
+#
+
+# Check terminal compatibility
+if [ ! "$TERM" ]; then
+  if [[ $COLORTERM = gnome-* && $TERM = xterm ]] && infocmp gnome-256color >/dev/null 2>&1; then
+    export TERM=gnome-256color
+  elif [[ $TERM != dumb ]] && infocmp xterm-256color >/dev/null 2>&1; then
+    export TERM=xterm-256color
+  fi
+fi
+
+# Set the palette
+if tput setaf 1 &> /dev/null; then
+  tput sgr0
+  if [[ $(tput colors) -ge 256 ]] 2>/dev/null; then
+    MAGENTA=$(tput setaf 9)
+    ORANGE=$(tput setaf 172)
+    GREEN=$(tput setaf 190)
+    PURPLE=$(tput setaf 141)
+    WHITE=$(tput setaf 0)
+    RED=$(tput setaf 124)
+    YELLOW=$(tput setaf 214)
+  else
+    MAGENTA=$(tput setaf 5)
+    ORANGE=$(tput setaf 4)
+    GREEN=$(tput setaf 2)
+    PURPLE=$(tput setaf 1)
+    WHITE=$(tput setaf 7)
+    RED=$(tput setaf 1)
+    YELLOW=$(tput setaf 3)
+  fi
+  BOLD=$(tput bold)
+  RESET=$(tput sgr0)
+else
+  MAGENTA="\033[0;31m"
+  ORANGE="\033[0;33m"
+  GREEN="\033[0;32m"
+  PURPLE="\033[0;35m"
+  WHITE="\033[0;37m"
+  RED="\033[0;31m"
+  YELLOW="\033[0;33m"
+
+  BOLD="" # boo
+  RESET="\033[m"
+fi
+
+export MAGENTA
+export ORANGE
+export GREEN
+export PURPLE
+export WHITE
+export BOLD
+export RESET
