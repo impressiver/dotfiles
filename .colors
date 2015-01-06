@@ -1,7 +1,8 @@
-# Impressiver’s projectrc prompt, modified from...
-# @gf3’s Sexy Bash Prompt, inspired by “Extravagant Zsh Prompt”
-# Shamelessly copied from https://github.com/gf3/dotfiles
-# For more info on terminal colors, see: http://mywiki.wooledge.org/BashFAQ/037
+#
+# Terminal color palette used to pimp '~/.bash_prompt' and script output
+#
+
+# For detailed info on terminal colors, check out: http://mywiki.wooledge.org/BashFAQ/037
 
 # # Test all 256 term colors (both 'tput' and ascii '\e[')
 # function taste-the-rainbow() {
@@ -13,10 +14,6 @@
 #   done )
 # }
 
-
-#
-# Terminal color palette used to pimp '~/.bash_prompt' and script output
-#
 
 # Check terminal compatibility
 if [ ! "$TERM" ]; then
@@ -62,6 +59,7 @@ else
   RESET="\033[m"
 fi
 
+# Spread the joy of color
 export MAGENTA
 export ORANGE
 export GREEN
