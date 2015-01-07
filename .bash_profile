@@ -41,7 +41,7 @@ complete -o "nospace" -W "Contacts Calendar Dock Finder Mail Safari iTunes Syste
 
 # Trap and echo non-zero exit codes
 EC() {
-  echo -e '\e[1;33m'trapped exit code $? from pid $!'\e[m\n'
+  echo "trapped exit code $? from pid $!"
 }
 trap EC ERR
 
