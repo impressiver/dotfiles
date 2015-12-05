@@ -38,11 +38,11 @@
 	# Undo a `git push`
 	undopush = push -f origin HEAD^:master
 	# Unstage files for commit
-	unadd = "!f() { files=\"$@\"; [ -z $files ] && files='.'; git reset HEAD -- $files; }; f"
+	unadd = "!f() { files=$@; [ -z $files ] && files='.'; git reset HEAD -- $files; }; f"
 	# Accept the local changes to resolve conflicts
-	accept-ours = "!f() { files=\"$@\"; [ -z $files ] && files='.'; git checkout --ours -- $files; git add -u $files; }; f"
+	accept-ours = "!f() { files=$@; [ -z $files ] && files='.'; git checkout --ours -- $files; git add -u $files; }; f"
 	# Accept the incoming changes to resolve conflicts
-	accept-theirs = "!f() { files=\"$@\"; [ -z $files ] && files='.'; git checkout --theirs -- $files; git add -u $files; }; f"
+	accept-theirs = "!f() { files=$@; [ -z $files ] && files='.'; git checkout --theirs -- $files; git add -u $files; }; f"
 	# CD to the root of the project
 	cd-top = !"cd $(git rev-parse --show-toplevel)"
 	# Show changed files that have not been pushed
@@ -54,7 +54,13 @@
 	# Merge upstream/master changes into current branch
 	merge-up = "!r() { upstream=${@:-'upstream'}; git fetch origin -v; git fetch $upstream -v; git merge \"$upstream/master\"; }; r"
 	# Apply Github pull request to current branch
-	apply-pullrequest = "!r() { curl \"$@\" | git am }; r"
+	pr-apply = "!r() { curl \"$@\" | git am }; r"
+	# Checkout Github pull request to new branch
+	pr-checkout = "!r() { git fetch origin pull/$1/head:pr-$1 && git checkout pr-$1; }; r"
+	# Stash, pull master, rebase, unstash
+	remaster = "!r() { git stash && git checkout master && git pull --rebase && git checkout - && git stash pop; }; r"
+	# Remove .orig files
+	#rm-orig = "!r() { find . -name \*.orig -exec rm \{\} \+; }; r"
 
 [core]
 	# Prevent rebase issues on OS X
@@ -69,10 +75,7 @@
 	# [default] space-before-tab: looks for spaces before tabs at the beginning of
 	# a line
 	whitespace = space-before-tab,trailing-space
-	# Disable line automatic line ending mods (breaks random things)
-	# See:
-	#		http://stackoverflow.com/questions/2016404/git-status-shows-modifications-git-checkout-file-doesnt-remove-them
-	#
+	# Leave line endings alone
 	autocrlf = false
 	# Use Sublime Text as the default editor
 	editor = subl -n -w
@@ -127,7 +130,7 @@
 	merge = refs/heads/master
 
 [push]
-	default = current
+	default = nothing
 
 # URL shorthands
 [url "git@github.com:"]

@@ -1,10 +1,9 @@
-# Add `~/bin` to the `$PATH`
-#export PATH="$HOME/bin:$PATH"
+echo "loading .bash_profile"
 
 # Load the shell dotfiles, and then some:
 # * ~/.path can be used to extend `$PATH` (generated path additions are also added to this file).
 # * ~/.extra can be used for settings you don’t want to commit.
-for file in ~/.{path,bash_prompt,exports,functions,aliases,extra,profile}; do
+for file in ${HOME}/.{bash_prompt,path,functions,aliases,exports,extra}; do
 	[ -r "$file" ] && [ -f "$file" ] && source "$file"
 done
 unset file
@@ -24,6 +23,7 @@ shopt -s cdspell
 for option in autocd globstar; do
 	shopt -s "$option" 2> /dev/null
 done
+unset option
 
 # Add tab completion for SSH hostnames based on ~/.ssh/config, ignoring wildcards
 [ -e "$HOME/.ssh/config" ] && complete -o "default" -o "nospace" -W "$(grep "^Host" ~/.ssh/config | grep -v "[?*]" | cut -d " " -f2 | tr ' ' '\n')" scp sftp ssh
@@ -35,15 +35,15 @@ complete -W "NSGlobalDomain" defaults
 # Add `killall` tab completion for common apps
 complete -o "nospace" -W "Contacts Calendar Dock Finder Mail Safari iTunes SystemUIServer Terminal Twitter" killall
 
-# If possible, add tab completion for many more commands
-[ -f /etc/bash_completion ] && source /etc/bash_completion
-[ -f /usr/local/etc/bash_completion ] && source /usr/local/etc/bash_completion
+# tab complete all the things
+[ -f /etc/bash_completion ] && . /etc/bash_completion
+[ -f $(brew --prefix)/etc/bash_completion ] && . $(brew --prefix)/etc/bash_completion
 
 # Trap and echo non-zero exit codes
 EC() {
-  echo "trapped exit code $? from pid $!"
+  echo -e "${GREY}trapped exit code ${?} from pid ${!} ${_}${RESET}"
 }
 trap EC ERR
 
-# Finally, perform directory check to load project context
-hcd .
+# Finally, perform directory check to auto-load project context
+#hcd .

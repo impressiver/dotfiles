@@ -44,12 +44,11 @@ export DROPBOX_DIR="$HOME/Dropbox"
 # Java
 export JAVA_HOME=$(/usr/libexec/java_home)
 
-# Docker
-export DOCKER_HOME=127.0.0.1:32000
-
 # TODO: (IW) Move to ~/.extra
 # Link Homebrew casks in `/Applications` rather than `~/Applications`
 export HOMEBREW_CASK_OPTS="--appdir=/Applications"
 
 # boot2docker
 export DOCKER_HOST=tcp://localhost:2375
+#unset DOCKER_CERT_PATH
+#unset DOCKER_TLS_VERIFY

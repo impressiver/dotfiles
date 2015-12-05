@@ -5,6 +5,12 @@
 # Make sure the color palette is sourced
 [ -f "${HOME}/.colors" ] && . "${HOME}/.colors"
 
+# Print an icon if the current directory is a git repo and rebasing
+function parse_git_rebase() {
+  # U+27F2 ANTICLOCKWISE GAPPED CIRCLE ARROW
+  [[ -n $(git branch 2> /dev/null) ]] && [[ $(git status 2> /dev/null | head -n1) == *"rebase in progress"* ]] && echo " ${RED}⟲${RESET}"
+}
+
 # Print an icon if the current directory is a git repo and there are local changes
 function parse_git_dirty() {
   # U+26A1 HIGH VOLTAGE SIGN (⚡)
@@ -22,5 +28,5 @@ function parse_project() {
 }
 
 # Nerd up the bash prompt
-export PS1="\[${BOLD}${MAGENTA}\]\u \[$WHITE\]at \[$ORANGE\]\h \[$WHITE\]in \[$ORANGE\]\w\[$WHITE\]\$([ \$(parse_project) ] && echo \" on \")\[$PURPLE\]\$(parse_project)\[$GREEN\]\$(parse_git_branch)\[$WHITE\]\$(parse_git_dirty)\n\$ \[$RESET\]"
+export PS1="\[${BOLD}${MAGENTA}\]\u \[$WHITE\]at \[$ORANGE\]\h \[$WHITE\]in \[$ORANGE\]\w\[$WHITE\]\$([ \$(parse_project) ] && echo \" on \")\[$PURPLE\]\$(parse_project)\[$GREEN\]\$(parse_git_branch)\[$WHITE\]\$(parse_git_rebase || parse_git_dirty)\n\$ \[$RESET\]"
 export PS2="\[$ORANGE\]→ \[$RESET\]"

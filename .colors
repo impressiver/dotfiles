@@ -3,19 +3,26 @@
 #
 
 # For detailed info on terminal colors, check out: http://mywiki.wooledge.org/BashFAQ/037
+# For a nice color chart: http://unix.stackexchange.com/a/124409
 
-# # Test all 256 term colors (both 'tput' and ascii '\e[')
-# function taste-the-rainbow() {
-#   echo "`printf %$((${COLUMNS}/2-12))s`Using 'tput' `printf %$((${COLUMNS}/2-19))s`Using ASCII '\\e'"
-#   ( x1=`tput op` x2=$"\e[0m" y=`printf %$((${COLUMNS}/2-4))s`
-#   for i in {0..256}; do
-#     local n=00$i;
-#     echo -e ${n:${#n}-3:3} `tput setaf $i; tput setab $i`${y// /=} $x1 $"\e[48;5;${i}m\e[38;5;${i}m"${y// /=} $x2
-#   done )
-# }
+#
+# Test all 256 term colors (both 'tput' and ascii '\e[')
+#
+
+function taste-the-rainbow() {
+  echo "`printf %$((${COLUMNS}/2-20))s`Using 'tput setaf *' `printf %$((${COLUMNS}/2-27))s`Using ASCII '\\e[38;5;*m'"
+  ( x1=`tput op` x2=$"\e[0m" y=`printf %$((${COLUMNS}/2-4))s`
+  for i in {0..256}; do
+    local n=00$i;
+    echo -e ${n:${#n}-3:3} `tput setaf $i; tput setab $i`${y// /=} $x1 $"\e[48;5;${i}m\e[38;5;${i}m"${y// /=} $x2
+  done )
+}
 
 
+#
 # Check terminal compatibility
+#
+
 if [ ! "$TERM" ]; then
   if [[ $COLORTERM = gnome-* && $TERM = xterm ]] && infocmp gnome-256color >/dev/null 2>&1; then
     export TERM=gnome-256color
@@ -24,7 +31,11 @@ if [ ! "$TERM" ]; then
   fi
 fi
 
+
+#
 # Set the palette
+#
+
 if tput setaf 1 &> /dev/null; then
   tput sgr0
   if [[ $(tput colors) -ge 256 ]] 2>/dev/null; then
@@ -35,6 +46,7 @@ if tput setaf 1 &> /dev/null; then
     WHITE=$(tput setaf 0)
     RED=$(tput setaf 124)
     YELLOW=$(tput setaf 214)
+    GREY=$(tput setaf 236)
   else
     MAGENTA=$(tput setaf 5)
     ORANGE=$(tput setaf 4)
@@ -43,6 +55,7 @@ if tput setaf 1 &> /dev/null; then
     WHITE=$(tput setaf 7)
     RED=$(tput setaf 1)
     YELLOW=$(tput setaf 3)
+    GREY=$(tput setaf 8)
   fi
   BOLD=$(tput bold)
   RESET=$(tput sgr0)
@@ -51,9 +64,10 @@ else
   ORANGE="\033[0;33m"
   GREEN="\033[0;32m"
   PURPLE="\033[0;35m"
-  WHITE="\033[0;37m"
+  WHITE="\033[0;97m"
   RED="\033[0;31m"
   YELLOW="\033[0;33m"
+  GREY="\033[0;37m"
 
   BOLD="" # boo
   RESET="\033[m"
@@ -64,6 +78,8 @@ export MAGENTA
 export ORANGE
 export GREEN
 export PURPLE
+export RED
 export WHITE
+export GREY
 export BOLD
 export RESET

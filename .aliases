@@ -7,7 +7,7 @@ alias ~="cd ~" # `cd` is probably faster to type though
 alias -- -="cd -"
 
 # Project-contextual cd
-alias cd="hcd"
+#alias cd="hcd"
 if [ ! -z "$WD" ]; then
   alias cdg="cd $WD"
 fi
@@ -114,26 +114,26 @@ alias rot13='tr a-zA-Z n-za-mN-ZA-M'
 
 # Empty the Trash on all mounted volumes and the main HDD
 # Also, clear Apple’s System Logs to improve shell startup speed
-alias emptytrash="sudo rm -rfv /Volumes/*/.Trashes; sudo rm -rfv ~/.Trash; sudo rm -rfv /private/var/log/asl/*.asl"
+alias empty-trash="sudo rm -rfv /Volumes/*/.Trashes; sudo rm -rfv ~/.Trash; sudo rm -rfv /private/var/log/asl/*.asl"
 
 # Add/remove hidden flag on a file/directory
 alias hide="chflags hidden"
 alias unhide="chflags nohidden"
 
 # Show/hide hidden files in Finder
-alias showall="defaults write com.apple.finder AppleShowAllFiles -bool true && killall Finder"
-alias shownormal="defaults write com.apple.finder AppleShowAllFiles -bool false && killall Finder"
+alias show-all-files="defaults write com.apple.finder AppleShowAllFiles -bool true && killall Finder"
+alias show-normal-files="defaults write com.apple.finder AppleShowAllFiles -bool false && killall Finder"
 
 # Hide/show all desktop icons (useful when presenting)
-alias hidedesktop="defaults write com.apple.finder CreateDesktop -bool false && killall Finder"
-alias showdesktop="defaults write com.apple.finder CreateDesktop -bool true && killall Finder"
+alias hide-desktop="defaults write com.apple.finder CreateDesktop -bool false && killall Finder"
+alias show-desktop="defaults write com.apple.finder CreateDesktop -bool true && killall Finder"
 
 # URL-encode strings
 alias urlencode='python -c "import sys, urllib as ul; print ul.quote_plus(sys.argv[1]);"'
 
 # Merge PDF files
-# Usage: `mergepdf -o output.pdf input{1,2,3}.pdf`
-alias mergepdf='/System/Library/Automator/Combine\ PDF\ Pages.action/Contents/Resources/join.py'
+# Usage: `merge-pdf -o output.pdf input{1,2,3}.pdf`
+alias merge-pdf='/System/Library/Automator/Combine\ PDF\ Pages.action/Contents/Resources/join.py'
 
 # Disable Spotlight
 alias spotoff="sudo mdutil -a -i off"
